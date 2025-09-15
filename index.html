@@ -357,14 +357,14 @@
         }
 
         /* Penanganan untuk perangkat dengan lebar sangat kecil */
-        @media (max-width: 350px) {
+        @media (max-width: 400px) {
             .profile h1 {
                 font-size: 22px;
             }
             
             .profile p {
-                font-size: 13px;
-                max-width: 98%;
+                font-size: 11px;
+                max-width: 100%;
             }
             
             .link-title {
@@ -373,6 +373,30 @@
             
             .link-subtitle {
                 font-size: 11px;
+            }
+        }
+
+        /* Untuk device sangat kecil */
+        @media (max-width: 320px) {
+            .profile h1 {
+                font-size: 20px;
+            }
+            
+            .profile p {
+                font-size: 10px;
+                max-width: 100%;
+            }
+        }
+
+        /* Untuk device ultra kecil */
+        @media (max-width: 280px) {
+            .profile h1 {
+                font-size: 18px;
+            }
+            
+            .profile p {
+                font-size: 9px;
+                max-width: 100%;
             }
         }
     </style>
