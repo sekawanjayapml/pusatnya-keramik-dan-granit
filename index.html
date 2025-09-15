@@ -248,6 +248,11 @@
             transition: color 0.3s ease, border 0.3s ease;
         }
 
+        /* Mengatur ukuran font untuk copyright */
+        .footer p:first-of-type {
+            font-size: 11px;
+        }
+
         /* Animasi */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -347,6 +352,11 @@
                 justify-content: flex-start; /* Mengubah untuk konten yang lebih panjang */
             }
 
+            /* Ukuran font copyright yang lebih kecil di mobile */
+            .footer p:first-of-type {
+                font-size: 10px;
+            }
+
             /* Mengurangi animasi untuk perangkat dengan spesifikasi rendah */
             @media (prefers-reduced-motion: reduce) {
                 .bubble, .link-item, .profile, .click-effect {
@@ -402,20 +412,16 @@
     </style>
 </head>
 <body>
-    <!-- Efek gelembung latar belakang -->
     <div class="bubbles" id="bubbles"></div>
 
     <div class="container">
-        <!-- Bagian profil -->
         <div class="profile">
             <img src="https://i.imgur.com/EUqsSFH.png" alt="Logo Sekawan Jaya" class="profile-img">
             <h1>SEKAWAN JAYA</h1>
             <p>PUSATNYA KERAMIK DAN GRANIT</p>
         </div>
 
-        <!-- Daftar link sesuai urutan yang diminta -->
         <div class="links">
-            <!-- 1. Konsultasi Gratis -->
             <a href="https://wa.me/6288216124228" class="link-item whatsapp" target="_blank">
                 <div class="popular-badge">!</div>
                 <div class="link-content">
@@ -428,7 +434,6 @@
                 <i class="fas fa-chevron-right link-arrow"></i>
             </a>
 
-            <!-- 2. Kalkulator Keramik -->
             <a href="https://sekawanjayapml.github.io/kalkulator" class="link-item calculator" target="_blank">
                 <div class="link-content">
                     <i class="fas fa-calculator"></i>
@@ -440,7 +445,6 @@
                 <i class="fas fa-chevron-right link-arrow"></i>
             </a>
 
-            <!-- 3. TikTok -->
             <a href="https://tiktok.com/@sekawanjayapemalang" class="link-item tiktok" target="_blank">
                 <div class="link-content">
                     <i class="fab fa-tiktok"></i>
@@ -452,7 +456,6 @@
                 <i class="fas fa-chevron-right link-arrow"></i>
             </a>
 
-            <!-- 4. Facebook -->
             <a href="https://facebook.com/sekawanjaya" class="link-item facebook" target="_blank">
                 <div class="link-content">
                     <i class="fab fa-facebook"></i>
@@ -464,7 +467,6 @@
                 <i class="fas fa-chevron-right link-arrow"></i>
             </a>
 
-            <!-- 5. Video Inspirasi -->
             <a href="https://youtube.com/@sekawanjaya" class="link-item youtube" target="_blank">
                 <div class="link-content">
                     <i class="fab fa-youtube"></i>
@@ -476,7 +478,6 @@
                 <i class="fas fa-chevron-right link-arrow"></i>
             </a>
 
-            <!-- 6. Katalog Produk -->
             <a href="https://drive.google.com/drive/folders/example" class="link-item catalog" target="_blank">
                 <div class="link-content">
                     <i class="fas fa-book-open"></i>
@@ -488,7 +489,6 @@
                 <i class="fas fa-chevron-right link-arrow"></i>
             </a>
 
-            <!-- 7. Kunjungi Showroom -->
             <a href="https://maps.app.goo.gl/YnCYXvS96K9WP9PYA" class="link-item location" target="_blank">
                 <div class="link-content">
                     <i class="fas fa-map-marker-alt"></i>
@@ -501,10 +501,8 @@
             </a>
         </div>
 
-        <!-- Footer -->
         <div class="footer">
             <p>© Copyright 2025, Sekawan Jaya. All Rights Reserved.</p>
-            <p style="margin-top: 5px; font-size: 12px;">Kepercayaan adalah prioritas utama kami</p>
         </div>
     </div>
 
@@ -588,6 +586,3 @@
 </body>
 
 </html>
-
-
-
