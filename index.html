@@ -582,13 +582,9 @@
             }
         }
 
-        // Handle link click dengan loading state dan delayed navigation
+        // Handle link click dengan efek loading yang lebih cepat
         document.querySelectorAll('.link-item').forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault(); // Mencegah navigasi langsung
-                
-                // Ambil data yang dibutuhkan
-                const originalHref = this.href;
                 const platform = this.getAttribute('data-platform');
                 const titleElement = this.querySelector('.link-title');
                 const originalTitle = titleElement.textContent;
@@ -612,14 +608,11 @@
                     effect.remove();
                 }, 600);
                 
-                // Delay navigation dan reset state
+                // Reset state setelah delay singkat - link tetap akan terbuka karena tidak ada preventDefault
                 setTimeout(() => {
                     this.classList.remove('loading');
                     titleElement.textContent = originalTitle;
-                    
-                    // Buka link di tab/app baru
-                    window.open(originalHref, '_blank');
-                }, 1500); // 1.5 detik delay
+                }, 800);
             });
         });
 
