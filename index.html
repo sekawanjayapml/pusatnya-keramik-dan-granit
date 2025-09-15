@@ -588,6 +588,71 @@
                 || window.innerWidth <= 768;
         }
 
+        // Variabel untuk menyimpan state loading
+        let loadingTimeouts = [];
+        let activeLoadingLinks = new Set();
+
+        // Fungsi untuk reset semua loading state
+        function resetAllLoadingStates() {
+            // Clear semua timeout yang sedang berjalan
+            loadingTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            loadingTimeouts = [];
+            
+            // Reset semua link yang sedang loading
+            document.querySelectorAll('.link-item.loading').forEach(link => {
+                link.classList.remove('loading');
+                const titleElement = link.querySelector('.link-title');
+                const platform = link.getAttribute('data-platform');
+                
+                // Restore original text berdasarkan platform
+                switch(platform) {
+                    case 'WhatsApp':
+                        titleElement.textContent = 'Hubungi WhatsApp';
+                        break;
+                    case 'Kalkulator':
+                        titleElement.textContent = 'Kalkulator Keramik';
+                        break;
+                    case 'TikTok':
+                        titleElement.textContent = 'TikTok';
+                        break;
+                    case 'Facebook':
+                        titleElement.textContent = 'Facebook';
+                        break;
+                    case 'YouTube':
+                        titleElement.textContent = 'Youtube';
+                        break;
+                    case 'Katalog':
+                        titleElement.textContent = 'Katalog Produk';
+                        break;
+                    case 'Lokasi':
+                        titleElement.textContent = 'Kunjungi Showroom';
+                        break;
+                    default:
+                        titleElement.textContent = platform;
+                }
+            });
+            
+            activeLoadingLinks.clear();
+        }
+
+        // Event listeners untuk mendeteksi ketika user kembali ke halaman
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // User kembali ke halaman, reset loading states
+                setTimeout(resetAllLoadingStates, 100);
+            }
+        });
+
+        window.addEventListener('focus', function() {
+            // Window kembali focus, reset loading states
+            setTimeout(resetAllLoadingStates, 100);
+        });
+
+        window.addEventListener('pageshow', function(event) {
+            // Halaman di-show kembali (termasuk dari back button)
+            setTimeout(resetAllLoadingStates, 100);
+        });
+
         // Handle link click dengan efek loading yang disesuaikan untuk mobile
         document.querySelectorAll('.link-item').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -595,6 +660,14 @@
                 const titleElement = this.querySelector('.link-title');
                 const originalTitle = titleElement.textContent;
                 const isMobile = isMobileDevice();
+                
+                // Jika sudah dalam loading state, ignore click
+                if (activeLoadingLinks.has(this)) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                activeLoadingLinks.add(this);
                 
                 // Untuk mobile, buat efek lebih cepat dan langsung
                 if (isMobile) {
@@ -619,16 +692,26 @@
                     this.appendChild(effect);
                     
                     // Hapus click effect
-                    setTimeout(() => {
+                    const effectTimeout = setTimeout(() => {
                         if (effect.parentNode) {
                             effect.remove();
                         }
                     }, 400);
+                    loadingTimeouts.push(effectTimeout);
                     
                     // Navigasi dengan delay singkat untuk mobile
-                    setTimeout(() => {
+                    const navTimeout = setTimeout(() => {
                         window.location.href = this.href;
-                    }, 300);
+                    }, 500);
+                    loadingTimeouts.push(navTimeout);
+                    
+                    // Fallback reset jika navigasi gagal
+                    const fallbackTimeout = setTimeout(() => {
+                        this.classList.remove('loading');
+                        titleElement.textContent = originalTitle;
+                        activeLoadingLinks.delete(this);
+                    }, 3000);
+                    loadingTimeouts.push(fallbackTimeout);
                     
                 } else {
                     // Untuk desktop, jalankan efek tanpa prevent default
@@ -646,24 +729,29 @@
                     this.appendChild(effect);
                     
                     // Hapus click effect
-                    setTimeout(() => {
+                    const effectTimeout = setTimeout(() => {
                         if (effect.parentNode) {
                             effect.remove();
                         }
                     }, 600);
+                    loadingTimeouts.push(effectTimeout);
                     
                     // Reset state setelah delay
-                    setTimeout(() => {
+                    const resetTimeout = setTimeout(() => {
                         this.classList.remove('loading');
                         titleElement.textContent = originalTitle;
+                        activeLoadingLinks.delete(this);
                     }, 800);
+                    loadingTimeouts.push(resetTimeout);
                 }
             });
             
             // Handle touch events khusus untuk mobile
             if (isMobileDevice()) {
                 link.addEventListener('touchstart', function(e) {
-                    this.style.transform = 'translateY(-2px)';
+                    if (!activeLoadingLinks.has(this)) {
+                        this.style.transform = 'translateY(-2px)';
+                    }
                 }, { passive: true });
                 
                 link.addEventListener('touchend', function(e) {
