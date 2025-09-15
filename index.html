@@ -582,38 +582,96 @@
             }
         }
 
-        // Handle link click dengan efek loading yang lebih cepat
+        // Deteksi perangkat mobile
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                || window.innerWidth <= 768;
+        }
+
+        // Handle link click dengan efek loading yang disesuaikan untuk mobile
         document.querySelectorAll('.link-item').forEach(link => {
             link.addEventListener('click', function(e) {
                 const platform = this.getAttribute('data-platform');
                 const titleElement = this.querySelector('.link-title');
                 const originalTitle = titleElement.textContent;
+                const isMobile = isMobileDevice();
                 
-                // Tambah loading state
-                this.classList.add('loading');
-                titleElement.textContent = `Membuka ${platform}...`;
-                
-                // Buat click effect
-                const effect = document.createElement('div');
-                effect.className = 'click-effect';
-                
-                const rect = this.getBoundingClientRect();
-                effect.style.left = `${e.clientX - rect.left - 50}px`;
-                effect.style.top = `${e.clientY - rect.top - 50}px`;
-                
-                this.appendChild(effect);
-                
-                // Hapus click effect
-                setTimeout(() => {
-                    effect.remove();
-                }, 600);
-                
-                // Reset state setelah delay singkat - link tetap akan terbuka karena tidak ada preventDefault
-                setTimeout(() => {
-                    this.classList.remove('loading');
-                    titleElement.textContent = originalTitle;
-                }, 800);
+                // Untuk mobile, buat efek lebih cepat dan langsung
+                if (isMobile) {
+                    // Prevent default untuk mobile agar bisa show loading
+                    e.preventDefault();
+                    
+                    // Tambah loading state langsung
+                    this.classList.add('loading');
+                    titleElement.textContent = `Membuka ${platform}...`;
+                    
+                    // Buat click effect
+                    const effect = document.createElement('div');
+                    effect.className = 'click-effect';
+                    
+                    const rect = this.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    
+                    effect.style.left = `${clientX - rect.left - 50}px`;
+                    effect.style.top = `${clientY - rect.top - 50}px`;
+                    
+                    this.appendChild(effect);
+                    
+                    // Hapus click effect
+                    setTimeout(() => {
+                        if (effect.parentNode) {
+                            effect.remove();
+                        }
+                    }, 400);
+                    
+                    // Navigasi dengan delay singkat untuk mobile
+                    setTimeout(() => {
+                        window.location.href = this.href;
+                    }, 300);
+                    
+                } else {
+                    // Untuk desktop, jalankan efek tanpa prevent default
+                    this.classList.add('loading');
+                    titleElement.textContent = `Membuka ${platform}...`;
+                    
+                    // Buat click effect
+                    const effect = document.createElement('div');
+                    effect.className = 'click-effect';
+                    
+                    const rect = this.getBoundingClientRect();
+                    effect.style.left = `${e.clientX - rect.left - 50}px`;
+                    effect.style.top = `${e.clientY - rect.top - 50}px`;
+                    
+                    this.appendChild(effect);
+                    
+                    // Hapus click effect
+                    setTimeout(() => {
+                        if (effect.parentNode) {
+                            effect.remove();
+                        }
+                    }, 600);
+                    
+                    // Reset state setelah delay
+                    setTimeout(() => {
+                        this.classList.remove('loading');
+                        titleElement.textContent = originalTitle;
+                    }, 800);
+                }
             });
+            
+            // Handle touch events khusus untuk mobile
+            if (isMobileDevice()) {
+                link.addEventListener('touchstart', function(e) {
+                    this.style.transform = 'translateY(-2px)';
+                }, { passive: true });
+                
+                link.addEventListener('touchend', function(e) {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                }, { passive: true });
+            }
         });
 
         // Inisialisasi saat halaman dimuat
