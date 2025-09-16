@@ -201,15 +201,6 @@
             cursor: pointer;
         }
 
-        .theme__toggle:before {
-            background-color: hsl(48,90%,55%);
-            border-radius: 50%;
-            content: "";
-            width: 2.5em;
-            height: 2.5em;
-            transition: 0.3s;
-        }
-
         .theme__toggle:focus {
             box-shadow: 0 0 0 0.125em var(--primary);
             outline: transparent;
@@ -526,152 +517,6 @@
             transform: scale(1);
         }
 
-        /* Feedback Form Styles */
-        .feedback-container {
-            width: 100%;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease;
-        }
-
-        .feedback-form {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--profile-border);
-            transition: all 0.3s ease;
-        }
-
-        .feedback-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: var(--text-color);
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .feedback-title i {
-            color: var(--medium-blue);
-        }
-
-        .feedback-form-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .feedback-input-group {
-            position: relative;
-        }
-
-        .feedback-textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: var(--text-color);
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        [data-theme="dark"] .feedback-textarea {
-            background-color: rgba(30, 41, 59, 0.8);
-            border-color: #4b5563;
-            color: #e5e7eb;
-        }
-
-        .feedback-textarea:focus {
-            outline: none;
-            border-color: var(--medium-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        .feedback-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .feedback-disclaimer {
-            font-size: 11px;
-            color: #6b7280;
-        }
-
-        [data-theme="dark"] .feedback-disclaimer {
-            color: #9ca3af;
-        }
-
-        .feedback-counter {
-            font-size: 11px;
-            color: #6b7280;
-        }
-
-        [data-theme="dark"] .feedback-counter {
-            color: #9ca3af;
-        }
-
-        .feedback-submit {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: var(--medium-blue);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feedback-submit:hover {
-            background: var(--light-blue);
-            transform: translateY(-2px);
-        }
-
-        .feedback-submit:active {
-            transform: translateY(0);
-        }
-
-        .feedback-submit-spinner {
-            display: none;
-            animation: spin 1s linear infinite;
-        }
-
-        .feedback-submit.loading .feedback-submit-text,
-        .feedback-submit.loading .feedback-submit-icon {
-            display: none;
-        }
-
-        .feedback-submit.loading .feedback-submit-spinner {
-            display: block;
-        }
-
-        .feedback-success {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background-color: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
-            color: #10b981;
-            margin-top: 15px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .feedback-success i {
-            font-size: 20px;
-        }
-
         /* Footer */
         .footer {
             text-align: center;
@@ -762,6 +607,146 @@
                 opacity: 0;
             }
         }
+        
+        /* Gaya untuk Feedback Form */
+        .feedback-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto 30px;
+            animation: fadeIn 1s ease;
+        }
+        
+        .feedback-form {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--profile-border);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease, border 0.3s ease;
+        }
+        
+        .feedback-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-title i {
+            color: var(--medium-blue);
+        }
+        
+        .feedback-input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .feedback-textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background: var(--hover-color);
+            color: var(--text-color);
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: var(--medium-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="dark"] .feedback-textarea {
+            background: #1f2937;
+            border-color: #4b5563;
+            color: #e5e7eb;
+        }
+
+        [data-theme="dark"] .feedback-textarea:focus {
+            border-color: var(--medium-blue);
+            box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.4);
+        }
+        
+        .feedback-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        
+        [data-theme="dark"] .feedback-info {
+            color: #9ca3af;
+        }
+        
+        .feedback-submit {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--light-blue);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .feedback-submit:hover {
+            background: var(--medium-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-submit:active {
+            transform: translateY(0);
+        }
+
+        .feedback-submit:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .feedback-submit-text,
+        .feedback-submit-icon {
+            transition: opacity 0.3s ease;
+        }
+        
+        .feedback-submit-spinner {
+            display: none;
+            animation: spin 1s linear infinite;
+        }
+        
+        .feedback-success {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            font-weight: 600;
+            animation: fadeIn 0.5s ease;
+            margin-top: 15px;
+        }
+
+        .feedback-success i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
         /* Responsivitas */
         @media (max-width: 600px) {
@@ -828,15 +813,6 @@
                 left: -0.15em;
             }
 
-            /* Feedback responsive */
-            .feedback-form {
-                padding: 15px;
-            }
-
-            .feedback-title {
-                font-size: 16px;
-            }
-
             @media (prefers-reduced-motion: reduce) {
                 .bubble, .link-item, .profile, .click-effect, .loading-spinner {
                     animation: none;
@@ -885,15 +861,6 @@
                 width: 1em;
                 height: 1em;
             }
-
-            /* Feedback responsive */
-            .feedback-title {
-                font-size: 15px;
-            }
-
-            .feedback-textarea {
-                font-size: 13px;
-            }
         }
 
         @media (max-width: 320px) {
@@ -904,11 +871,6 @@
             .profile p {
                 font-size: 10px;
                 max-width: 100%;
-            }
-
-            /* Feedback responsive */
-            .feedback-title {
-                font-size: 14px;
             }
         }
 
@@ -949,18 +911,12 @@
                 width: 0.9em;
                 height: 0.9em;
             }
-
-            /* Feedback responsive */
-            .feedback-title {
-                font-size: 13px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="bubbles" id="bubbles"></div>
 
-    <!-- Theme Switch by JkHuger -->
     <div class="theme">
         <div class="theme__toggle-wrap">
             <input class="theme__toggle" type="checkbox" id="theme-toggle" aria-label="Toggle theme">
@@ -1073,7 +1029,6 @@
             </a>
         </div>
 
-        <!-- Feedback Form -->
         <div class="feedback-container">
             <div class="feedback-form">
                 <h3 class="feedback-title">
@@ -1106,7 +1061,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="footer">
             <p>© Copyright 2025, Sekawan Jaya. All Rights Reserved.</p>
         </div>
@@ -1115,141 +1070,333 @@
     <script>
         // Theme toggle functionality
         const themeToggle = document.getElementById('theme-toggle');
-        const htmlElement = document.documentElement;
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         
-        // Check for saved theme preference or respect OS preference
-        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        
-        // Apply the saved theme
-        if (savedTheme === 'dark') {
-            htmlElement.setAttribute('data-theme', 'dark');
+        // Set initial theme based on system preference or saved preference
+        const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
             themeToggle.checked = true;
-        } else {
-            htmlElement.removeAttribute('data-theme');
-            themeToggle.checked = false;
         }
         
-        // Listen for theme toggle changes
+        // Toggle theme when switch is clicked
         themeToggle.addEventListener('change', function() {
             if (this.checked) {
-                htmlElement.setAttribute('data-theme', 'dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
             } else {
-                htmlElement.removeAttribute('data-theme');
+                document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
             }
         });
 
-        // Create background bubbles
+        // Membuat efek gelembung
         function createBubbles() {
             const bubblesContainer = document.getElementById('bubbles');
-            const bubbleCount = 15;
+            const bubbleCount = window.innerWidth < 600 ? 10 : 15;
             
             for (let i = 0; i < bubbleCount; i++) {
                 const bubble = document.createElement('div');
                 bubble.classList.add('bubble');
                 
-                // Random size
-                const size = Math.random() * 40 + 20;
+                const posX = Math.random() * 100;
+                bubble.style.left = `${posX}%`;
+                
+                const size = Math.random() * 30 + 20;
                 bubble.style.width = `${size}px`;
                 bubble.style.height = `${size}px`;
                 
-                // Random position
-                bubble.style.left = `${Math.random() * 100}%`;
+                const animationDuration = Math.random() * 15 + 10;
+                bubble.style.animationDuration = `${animationDuration}s`;
                 
-                // Random animation delay
-                bubble.style.animationDelay = `${Math.random() * 15}s`;
-                
-                // Random animation duration
-                bubble.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                const delay = Math.random() * 10;
+                bubble.style.animationDelay = `${delay}s`;
                 
                 bubblesContainer.appendChild(bubble);
             }
         }
 
-        // Click effect
-        document.addEventListener('click', function(e) {
-            const clickEffect = document.createElement('div');
-            clickEffect.classList.add('click-effect');
-            clickEffect.style.left = `${e.clientX - 50}px`;
-            clickEffect.style.top = `${e.clientY - 50}px`;
-            document.body.appendChild(clickEffect);
+        // Deteksi perangkat mobile
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                || window.innerWidth <= 768;
+        }
+
+        // Variabel untuk menyimpan state loading
+        let loadingTimeouts = [];
+        let activeLoadingLinks = new Set();
+
+        // Fungsi untuk reset semua loading state
+        function resetAllLoadingStates() {
+            // Clear semua timeout yang sedang berjalan
+            loadingTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            loadingTimeouts = [];
             
-            // Remove the element after animation completes
-            setTimeout(() => {
-                clickEffect.remove();
-            }, 600);
+            // Reset semua link yang sedang loading
+            document.querySelectorAll('.link-item.loading').forEach(link => {
+                link.classList.remove('loading');
+                const titleElement = link.querySelector('.link-title');
+                const platform = link.getAttribute('data-platform');
+                
+                // Restore original text berdasarkan platform
+                switch(platform) {
+                    case 'WhatsApp':
+                        titleElement.textContent = 'Hubungi WhatsApp';
+                        break;
+                    case 'Kalkulator':
+                        titleElement.textContent = 'Kalkulator Keramik';
+                        break;
+                    case 'TikTok':
+                        titleElement.textContent = 'TikTok';
+                        break;
+                    case 'Facebook':
+                        titleElement.textContent = 'Facebook';
+                        break;
+                    case 'YouTube':
+                        titleElement.textContent = 'Youtube';
+                        break;
+                    case 'Katalog':
+                        titleElement.textContent = 'Katalog Produk';
+                        break;
+                    case 'Lokasi':
+                        titleElement.textContent = 'Kunjungi Showroom';
+                        break;
+                    default:
+                        titleElement.textContent = platform;
+                }
+            });
+            
+            activeLoadingLinks.clear();
+        }
+
+        // Event listeners untuk mendeteksi ketika user kembali ke halaman
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // User kembali ke halaman, reset loading states
+                setTimeout(resetAllLoadingStates, 100);
+            }
         });
 
-        // Link loading simulation
+        window.addEventListener('focus', function() {
+            // Window kembali focus, reset loading states
+            setTimeout(resetAllLoadingStates, 100);
+        });
+
+        window.addEventListener('pageshow', function(event) {
+            // Halaman di-show kembali (termasuk dari back button)
+            setTimeout(resetAllLoadingStates, 100);
+        });
+
+        // Handle link click dengan efek loading yang disesuaikan untuk mobile
         document.querySelectorAll('.link-item').forEach(link => {
             link.addEventListener('click', function(e) {
-                // Don't prevent default behavior for external links
-                this.classList.add('loading');
+                const platform = this.getAttribute('data-platform');
+                const titleElement = this.querySelector('.link-title');
+                const originalTitle = titleElement.textContent;
+                const isMobile = isMobileDevice();
+                const linkHref = this.href;
                 
-                // Simulate a delay for the loading effect
-                setTimeout(() => {
-                    this.classList.remove('loading');
-                }, 1500);
+                // Jika sudah dalam loading state, ignore click
+                if (activeLoadingLinks.has(this)) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                activeLoadingLinks.add(this);
+                
+                // Untuk mobile, buat efek lebih cepat dan langsung
+                if (isMobile) {
+                    // Prevent default untuk mobile agar bisa show loading
+                    e.preventDefault();
+                    
+                    // Tambah loading state langsung
+                    this.classList.add('loading');
+                    titleElement.textContent = `Membuka ${platform}...`;
+                    
+                    // Buat click effect
+                    const effect = document.createElement('div');
+                    effect.className = 'click-effect';
+                    
+                    const rect = this.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    
+                    effect.style.left = `${clientX - rect.left - 50}px`;
+                    effect.style.top = `${clientY - rect.top - 50}px`;
+                    
+                    this.appendChild(effect);
+                    
+                    // Hapus click effect
+                    const effectTimeout = setTimeout(() => {
+                        if (effect.parentNode) {
+                            effect.remove();
+                        }
+                    }, 400);
+                    loadingTimeouts.push(effectTimeout);
+                    
+                    // Navigasi dengan delay singkat untuk mobile
+                    const navTimeout = setTimeout(() => {
+                        // Pastikan link masih dalam loading state sebelum navigasi
+                        if (this.classList.contains('loading')) {
+                            window.location.href = linkHref;
+                        }
+                    }, 600);
+                    loadingTimeouts.push(navTimeout);
+                    
+                    // Fallback reset jika navigasi gagal
+                    const fallbackTimeout = setTimeout(() => {
+                        if (this.classList.contains('loading')) {
+                            this.classList.remove('loading');
+                            titleElement.textContent = originalTitle;
+                            activeLoadingLinks.delete(this);
+                        }
+                    }, 3000);
+                    loadingTimeouts.push(fallbackTimeout);
+                    
+                } else {
+                    // Untuk desktop, jalankan efek tanpa prevent default
+                    this.classList.add('loading');
+                    titleElement.textContent = `Membuka ${platform}...`;
+                    
+                    // Buat click effect
+                    const effect = document.createElement('div');
+                    effect.className = 'click-effect';
+                    
+                    const rect = this.getBoundingClientRect();
+                    effect.style.left = `${e.clientX - rect.left - 50}px`;
+                    effect.style.top = `${e.clientY - rect.top - 50}px`;
+                    
+                    this.appendChild(effect);
+                    
+                    // Hapus click effect
+                    const effectTimeout = setTimeout(() => {
+                        if (effect.parentNode) {
+                            effect.remove();
+                        }
+                    }, 600);
+                    loadingTimeouts.push(effectTimeout);
+                    
+                    // Reset state setelah delay
+                    const resetTimeout = setTimeout(() => {
+                        if (this.classList.contains('loading')) {
+                            this.classList.remove('loading');
+                            titleElement.textContent = originalTitle;
+                            activeLoadingLinks.delete(this);
+                        }
+                    }, 1500);
+                    loadingTimeouts.push(resetTimeout);
+                }
+            });
+            
+            // Handle touch events khusus untuk mobile
+            if (isMobileDevice()) {
+                link.addEventListener('touchstart', function(e) {
+                    if (!activeLoadingLinks.has(this)) {
+                        this.style.transform = 'translateY(-2px)';
+                    }
+                }, { passive: true });
+                
+                link.addEventListener('touchend', function(e) {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                }, { passive: true });
+            }
+        });
+
+        // Inisialisasi saat halaman dimuat
+        window.addEventListener('load', () => {
+            createBubbles();
+            
+            // Animasi link dengan delay bertahap
+            document.querySelectorAll('.link-item').forEach((link, index) => {
+                link.style.animationDelay = `${index * 0.1}s`;
             });
         });
 
-        // Feedback form functionality
+        // Mencegah zoom pada input
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Feedback Form Script
         const feedbackForm = document.getElementById('feedback-form');
         const feedbackMessage = document.getElementById('feedback-message');
         const feedbackCounter = document.querySelector('.feedback-counter');
         const feedbackSubmit = document.getElementById('feedback-submit');
+        const feedbackSubmitText = document.querySelector('.feedback-submit-text');
+        const feedbackSubmitIcon = document.querySelector('.feedback-submit-icon');
+        const feedbackSubmitSpinner = document.querySelector('.feedback-submit-spinner');
         const feedbackSuccess = document.getElementById('feedback-success');
 
-        // Character counter
-        feedbackMessage.addEventListener('input', function() {
-            const charCount = this.value.length;
-            feedbackCounter.textContent = `${charCount}/500`;
-            
-            if (charCount > 450) {
-                feedbackCounter.style.color = '#ef4444';
-            } else if (charCount > 400) {
-                feedbackCounter.style.color = '#f59e0b';
-            } else {
-                feedbackCounter.style.color = '';
-            }
+        // Update character counter
+        feedbackMessage.addEventListener('input', () => {
+            const currentLength = feedbackMessage.value.length;
+            const maxLength = feedbackMessage.getAttribute('maxlength');
+            feedbackCounter.textContent = `${currentLength}/${maxLength}`;
+            feedbackSubmit.disabled = currentLength === 0;
         });
 
-        // Form submission
-        feedbackForm.addEventListener('submit', function(e) {
+        // Handle form submission
+        feedbackForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const message = feedbackMessage.value.trim();
-            
-            if (message.length < 10) {
-                alert('Pesan terlalu pendek. Silakan tulis minimal 10 karakter.');
+            if (!message) {
                 return;
             }
-            
+
             // Show loading state
-            feedbackSubmit.classList.add('loading');
-            
-            // Simulate form submission
-            setTimeout(() => {
+            feedbackSubmit.disabled = true;
+            feedbackSubmitText.style.opacity = '0';
+            feedbackSubmitIcon.style.display = 'none';
+            feedbackSubmitSpinner.style.display = 'inline-block';
+
+            // Send feedback (replace with your actual API endpoint or email service)
+            // This is a placeholder for demonstration purposes
+            const endpoint = 'YOUR_API_ENDPOINT_HERE'; 
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (response.ok) {
+                    // Success state
+                    feedbackForm.style.display = 'none';
+                    feedbackSuccess.style.display = 'block';
+                } else {
+                    // Handle API error
+                    alert('Gagal mengirim feedback. Silakan coba lagi.');
+                }
+            } catch (error) {
+                // Handle network error
+                alert('Terjadi kesalahan jaringan. Silakan periksa koneksi internet Anda.');
+            } finally {
                 // Hide loading state
-                feedbackSubmit.classList.remove('loading');
-                
-                // Show success message
-                feedbackSuccess.style.display = 'flex';
-                
-                // Reset form
-                feedbackMessage.value = '';
-                feedbackCounter.textContent = '0/500';
-                
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    feedbackSuccess.style.display = 'none';
-                }, 5000);
-            }, 1500);
+                feedbackSubmitSpinner.style.display = 'none';
+                feedbackSubmitText.style.opacity = '1';
+                feedbackSubmitIcon.style.display = 'inline-block';
+                feedbackSubmit.disabled = false;
+            }
         });
 
-        // Initialize bubbles on page load
-        window.addEventListener('load', createBubbles);
+        // Initialize button state
+        feedbackSubmit.disabled = true;
     </script>
 </body>
 </html>
