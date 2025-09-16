@@ -660,6 +660,7 @@
                 const titleElement = this.querySelector('.link-title');
                 const originalTitle = titleElement.textContent;
                 const isMobile = isMobileDevice();
+                const linkHref = this.href;
                 
                 // Jika sudah dalam loading state, ignore click
                 if (activeLoadingLinks.has(this)) {
@@ -701,15 +702,20 @@
                     
                     // Navigasi dengan delay singkat untuk mobile
                     const navTimeout = setTimeout(() => {
-                        window.location.href = this.href;
-                    }, 500);
+                        // Pastikan link masih dalam loading state sebelum navigasi
+                        if (this.classList.contains('loading')) {
+                            window.location.href = linkHref;
+                        }
+                    }, 600);
                     loadingTimeouts.push(navTimeout);
                     
                     // Fallback reset jika navigasi gagal
                     const fallbackTimeout = setTimeout(() => {
-                        this.classList.remove('loading');
-                        titleElement.textContent = originalTitle;
-                        activeLoadingLinks.delete(this);
+                        if (this.classList.contains('loading')) {
+                            this.classList.remove('loading');
+                            titleElement.textContent = originalTitle;
+                            activeLoadingLinks.delete(this);
+                        }
                     }, 3000);
                     loadingTimeouts.push(fallbackTimeout);
                     
@@ -738,10 +744,12 @@
                     
                     // Reset state setelah delay
                     const resetTimeout = setTimeout(() => {
-                        this.classList.remove('loading');
-                        titleElement.textContent = originalTitle;
-                        activeLoadingLinks.delete(this);
-                    }, 800);
+                        if (this.classList.contains('loading')) {
+                            this.classList.remove('loading');
+                            titleElement.textContent = originalTitle;
+                            activeLoadingLinks.delete(this);
+                        }
+                    }, 1500);
                     loadingTimeouts.push(resetTimeout);
                 }
             });
@@ -790,5 +798,3 @@
     </script>
 </body>
 </html>
-
-
