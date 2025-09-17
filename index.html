@@ -313,7 +313,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, var(--accent-gold), var(--light-blue), var(--accent-gold));
+            background: linear-gradient(45deg, var(--accept-gold), var(--light-blue), var(--accent-gold));
             border-radius: 18px;
             z-index: -1;
             opacity: 0.5;
@@ -961,7 +961,7 @@
     <div class="bubbles" id="bubbles"></div>
 
     <!-- Theme Switch by JkHuger -->
-            <div class="theme">
+    <div class="theme">
         <div class="theme__toggle-wrap">
             <input class="theme__toggle" type="checkbox" id="theme-toggle" aria-label="Toggle theme">
             <div class="theme__icon">
@@ -1167,140 +1167,143 @@
                 || window.innerWidth <= 768;
         }
 
-        // Simplified state management
-        let linkTimeouts = new Map();
-
-        // Fungsi untuk mendapatkan original title berdasarkan platform
-        function getOriginalTitle(platform) {
-            const titles = {
-                'WhatsApp': 'Hubungi WhatsApp',
-                'Kalkulator': 'Kalkulator Keramik',
-                'TikTok': 'TikTok',
-                'Facebook': 'Facebook',
-                'YouTube': 'Youtube',
-                'Katalog': 'Katalog Produk',
-                'Lokasi': 'Kunjungi Showroom'
-            };
-            return titles[platform] || platform;
-        }
-
-        // Fungsi untuk reset loading state pada link tertentu
-        function resetLinkState(link) {
-            const platform = link.getAttribute('data-platform');
-            const titleElement = link.querySelector('.link-title');
-            
-            link.classList.remove('loading');
-            titleElement.textContent = getOriginalTitle(platform);
-            
-            // Clear timeout jika ada
-            if (linkTimeouts.has(link)) {
-                clearTimeout(linkTimeouts.get(link));
-                linkTimeouts.delete(link);
-            }
-        }
+        // Variabel untuk menyimpan state loading
+        let loadingTimeouts = [];
+        let activeLoadingLinks = new Set();
 
         // Fungsi untuk reset semua loading state
         function resetAllLoadingStates() {
-            document.querySelectorAll('.link-item.loading').forEach(resetLinkState);
-            linkTimeouts.clear();
+            // Clear semua timeout yang sedang berjalan
+            loadingTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            loadingTimeouts = [];
+            
+            // Reset semua link yang sedang loading
+            document.querySelectorAll('.link-item.loading').forEach(link => {
+                link.classList.remove('loading');
+                const titleElement = link.querySelector('.link-title');
+                const platform = link.getAttribute('data-platform');
+                
+                // Restore original text berdasarkan platform
+                switch(platform) {
+                    case 'WhatsApp':
+                        titleElement.textContent = 'Hubungi WhatsApp';
+                        break;
+                    case 'Kalkulator':
+                        titleElement.textContent = 'Kalkulator Keramik';
+                        break;
+                    case 'TikTok':
+                        titleElement.textContent = 'TikTok';
+                        break;
+                    case 'Facebook':
+                        titleElement.textContent = 'Facebook';
+                        break;
+                    case 'YouTube':
+                        titleElement.textContent = 'Youtube';
+                        break;
+                    case 'Katalog':
+                        titleElement.textContent = 'Katalog Produk';
+                        break;
+                    case 'Lokasi':
+                        titleElement.textContent = 'Kunjungi Showroom';
+                        break;
+                    default:
+                        titleElement.textContent = platform;
+                }
+            });
+            
+            activeLoadingLinks.clear();
         }
 
-        // Event listeners dengan debounce untuk avoid excessive resets
-        let visibilityTimer;
+        // Event listeners untuk mendeteksi ketika user kembali ke halaman
         document.addEventListener('visibilitychange', function() {
             if (!document.hidden) {
-                clearTimeout(visibilityTimer);
-                visibilityTimer = setTimeout(resetAllLoadingStates, 50);
+                // User kembali ke halaman, reset loading states
+                setTimeout(resetAllLoadingStates, 100);
             }
+        });
+
+        window.addEventListener('focus', function() {
+            // Window kembali focus, reset loading states
+            setTimeout(resetAllLoadingStates, 100);
         });
 
         window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                resetAllLoadingStates();
-            }
+            // Halaman di-show kembali (termasuk dari back button)
+            setTimeout(resetAllLoadingStates, 100);
         });
 
-        // Handle link click dengan implementasi mobile-first yang robust
+        // Handle link click dengan efek loading yang disesuaikan untuk mobile
         document.querySelectorAll('.link-item').forEach(link => {
-            // Hanya gunakan click event untuk menghindari race condition
             link.addEventListener('click', function(e) {
                 const platform = this.getAttribute('data-platform');
                 const titleElement = this.querySelector('.link-title');
-                const linkHref = this.href;
+                const originalTitle = titleElement.textContent;
                 const isMobile = isMobileDevice();
+                const linkHref = this.href;
                 
-                // Jika sudah dalam loading state, prevent multiple clicks
-                if (this.classList.contains('loading')) {
+                // Jika sudah dalam loading state, ignore click
+                if (activeLoadingLinks.has(this)) {
                     e.preventDefault();
                     return;
                 }
                 
-                // Clear any existing timeout for this link
-                if (linkTimeouts.has(this)) {
-                    clearTimeout(linkTimeouts.get(this));
-                }
+                activeLoadingLinks.add(this);
                 
-                // Mobile-first approach: navigasi immediate tapi dengan visual delay
+                // Untuk mobile, buat efek lebih cepat dan langsung
                 if (isMobile) {
-                    // Prevent default untuk control navigasi
+                    // Prevent default untuk mobile agar bisa show loading
                     e.preventDefault();
                     
-                    // Immediate navigation untuk menghindari browser blocking
-                    const navigateNow = () => {
-                        try {
-                            // Gunakan location.assign yang lebih reliable
-                            window.location.assign(linkHref);
-                        } catch (error) {
-                            // Fallback ke method lain jika gagal
-                            try {
-                                window.open(linkHref, '_self');
-                            } catch (fallbackError) {
-                                window.location.href = linkHref;
-                            }
-                        }
-                    };
-                    
-                    // Show loading state immediately
+                    // Tambah loading state langsung
                     this.classList.add('loading');
                     titleElement.textContent = `Membuka ${platform}...`;
                     
-                    // Create click effect
+                    // Buat click effect
                     const effect = document.createElement('div');
                     effect.className = 'click-effect';
                     
                     const rect = this.getBoundingClientRect();
-                    const clientX = e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX;
-                    const clientY = e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY;
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
                     
                     effect.style.left = `${clientX - rect.left - 50}px`;
                     effect.style.top = `${clientY - rect.top - 50}px`;
                     
                     this.appendChild(effect);
                     
-                    // Navigate immediately untuk menghindari browser restrictions
-                    // Tapi dengan small delay untuk visual feedback
-                    const navigateTimeout = setTimeout(() => {
-                        navigateNow();
-                    }, 150); // Minimal delay untuk visual feedback
-                    
-                    linkTimeouts.set(this, navigateTimeout);
-                    
-                    // Cleanup click effect
-                    setTimeout(() => {
+                    // Hapus click effect
+                    const effectTimeout = setTimeout(() => {
                         if (effect.parentNode) {
                             effect.remove();
                         }
+                    }, 400);
+                    loadingTimeouts.push(effectTimeout);
+                    
+                    // Navigasi dengan delay singkat untuk mobile
+                    const navTimeout = setTimeout(() => {
+                        // Pastikan link masih dalam loading state sebelum navigasi
+                        if (this.classList.contains('loading')) {
+                            window.location.href = linkHref;
+                        }
                     }, 600);
+                    loadingTimeouts.push(navTimeout);
+                    
+                    // Fallback reset jika navigasi gagal
+                    const fallbackTimeout = setTimeout(() => {
+                        if (this.classList.contains('loading')) {
+                            this.classList.remove('loading');
+                            titleElement.textContent = originalTitle;
+                            activeLoadingLinks.delete(this);
+                        }
+                    }, 3000);
+                    loadingTimeouts.push(fallbackTimeout);
                     
                 } else {
-                    // Desktop: tetap gunakan natural navigation dengan visual delay
-                    // Tidak prevent default, biarkan browser handle navigation
-                    
-                    // Show loading state
+                    // Untuk desktop, jalankan efek tanpa prevent default
                     this.classList.add('loading');
                     titleElement.textContent = `Membuka ${platform}...`;
                     
-                    // Create click effect
+                    // Buat click effect
                     const effect = document.createElement('div');
                     effect.className = 'click-effect';
                     
@@ -1310,36 +1313,38 @@
                     
                     this.appendChild(effect);
                     
-                    // Cleanup effect
-                    setTimeout(() => {
+                    // Hapus click effect
+                    const effectTimeout = setTimeout(() => {
                         if (effect.parentNode) {
                             effect.remove();
                         }
                     }, 600);
+                    loadingTimeouts.push(effectTimeout);
                     
-                    // Reset state after delay (jika user masih di halaman)
+                    // Reset state setelah delay
                     const resetTimeout = setTimeout(() => {
-                        resetLinkState(this);
+                        if (this.classList.contains('loading')) {
+                            this.classList.remove('loading');
+                            titleElement.textContent = originalTitle;
+                            activeLoadingLinks.delete(this);
+                        }
                     }, 1500);
-                    
-                    linkTimeouts.set(this, resetTimeout);
+                    loadingTimeouts.push(resetTimeout);
                 }
             });
             
-            // Simplified touch feedback untuk mobile tanpa interference
+            // Handle touch events khusus untuk mobile
             if (isMobileDevice()) {
-                link.addEventListener('touchstart', function() {
-                    if (!this.classList.contains('loading')) {
+                link.addEventListener('touchstart', function(e) {
+                    if (!activeLoadingLinks.has(this)) {
                         this.style.transform = 'translateY(-2px)';
                     }
                 }, { passive: true });
                 
-                link.addEventListener('touchend', function() {
-                    if (!this.classList.contains('loading')) {
-                        setTimeout(() => {
-                            this.style.transform = '';
-                        }, 100);
-                    }
+                link.addEventListener('touchend', function(e) {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
                 }, { passive: true });
             }
         });
