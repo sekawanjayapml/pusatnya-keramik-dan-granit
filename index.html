@@ -1167,72 +1167,48 @@
                 || window.innerWidth <= 768;
         }
 
-        // Variabel untuk menyimpan state loading
-        let loadingTimeouts = [];
-        let activeLoadingLinks = new Set();
+        // State management yang diperbaiki - menggunakan Map untuk tracking yang lebih detail
+        let activeLoadingLinks = new Map();
 
-        // Fungsi untuk reset semua loading state
-        function resetAllLoadingStates() {
-            // Clear semua timeout yang sedang berjalan
-            loadingTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
-            loadingTimeouts = [];
+        // Fungsi untuk reset loading state pada link tertentu
+        function resetLoadingState(linkElement) {
+            if (!linkElement) return;
             
-            // Reset semua link yang sedang loading
-            document.querySelectorAll('.link-item.loading').forEach(link => {
-                link.classList.remove('loading');
-                const titleElement = link.querySelector('.link-title');
-                const platform = link.getAttribute('data-platform');
-                
-                // Restore original text berdasarkan platform
-                switch(platform) {
-                    case 'WhatsApp':
-                        titleElement.textContent = 'Hubungi WhatsApp';
-                        break;
-                    case 'Kalkulator':
-                        titleElement.textContent = 'Kalkulator Keramik';
-                        break;
-                    case 'TikTok':
-                        titleElement.textContent = 'TikTok';
-                        break;
-                    case 'Facebook':
-                        titleElement.textContent = 'Facebook';
-                        break;
-                    case 'YouTube':
-                        titleElement.textContent = 'Youtube';
-                        break;
-                    case 'Katalog':
-                        titleElement.textContent = 'Katalog Produk';
-                        break;
-                    case 'Lokasi':
-                        titleElement.textContent = 'Kunjungi Showroom';
-                        break;
-                    default:
-                        titleElement.textContent = platform;
-                }
-            });
+            const linkData = activeLoadingLinks.get(linkElement);
+            if (!linkData) return;
             
-            activeLoadingLinks.clear();
+            // Clear timeout jika ada
+            if (linkData.timeout) {
+                clearTimeout(linkData.timeout);
+            }
+            
+            // Reset visual state
+            linkElement.classList.remove('loading');
+            const titleElement = linkElement.querySelector('.link-title');
+            if (titleElement && linkData.originalTitle) {
+                titleElement.textContent = linkData.originalTitle;
+            }
+            
+            // Remove from active links
+            activeLoadingLinks.delete(linkElement);
         }
 
-        // Event listeners untuk mendeteksi ketika user kembali ke halaman
+        // Event listener dengan debouncing untuk mencegah multiple triggers yang tidak perlu
+        let visibilityTimeout;
         document.addEventListener('visibilitychange', function() {
+            // Hanya reset jika halaman benar-benar ditinggalkan dan kembali
             if (!document.hidden) {
-                // User kembali ke halaman, reset loading states
-                setTimeout(resetAllLoadingStates, 100);
+                clearTimeout(visibilityTimeout);
+                visibilityTimeout = setTimeout(() => {
+                    // Hanya reset jika ada indikasi user benar-benar kembali dari navigasi
+                    if (performance.navigation && performance.navigation.type === 2) {
+                        activeLoadingLinks.forEach((data, link) => resetLoadingState(link));
+                    }
+                }, 500);
             }
         });
 
-        window.addEventListener('focus', function() {
-            // Window kembali focus, reset loading states
-            setTimeout(resetAllLoadingStates, 100);
-        });
-
-        window.addEventListener('pageshow', function(event) {
-            // Halaman di-show kembali (termasuk dari back button)
-            setTimeout(resetAllLoadingStates, 100);
-        });
-
-        // Handle link click dengan efek loading yang disesuaikan untuk mobile
+        // Handle link click dengan logic yang diperbaiki
         document.querySelectorAll('.link-item').forEach(link => {
             link.addEventListener('click', function(e) {
                 const platform = this.getAttribute('data-platform');
@@ -1247,7 +1223,13 @@
                     return;
                 }
                 
-                activeLoadingLinks.add(this);
+                // Simpan data loading dengan original title dan timeout reference
+                const loadingData = {
+                    originalTitle: originalTitle,
+                    timeout: null,
+                    startTime: Date.now()
+                };
+                activeLoadingLinks.set(this, loadingData);
                 
                 // Untuk mobile, buat efek lebih cepat dan langsung
                 if (isMobile) {
@@ -1271,32 +1253,17 @@
                     
                     this.appendChild(effect);
                     
-                    // Hapus click effect
-                    const effectTimeout = setTimeout(() => {
+                    // Kombinasikan efek removal dan navigasi dalam satu timeout
+                    loadingData.timeout = setTimeout(() => {
                         if (effect.parentNode) {
                             effect.remove();
                         }
-                    }, 400);
-                    loadingTimeouts.push(effectTimeout);
-                    
-                    // Navigasi dengan delay singkat untuk mobile
-                    const navTimeout = setTimeout(() => {
-                        // Pastikan link masih dalam loading state sebelum navigasi
-                        if (this.classList.contains('loading')) {
+                        
+                        // Pastikan masih dalam loading state sebelum navigasi
+                        if (activeLoadingLinks.has(this)) {
                             window.location.href = linkHref;
                         }
                     }, 600);
-                    loadingTimeouts.push(navTimeout);
-                    
-                    // Fallback reset jika navigasi gagal
-                    const fallbackTimeout = setTimeout(() => {
-                        if (this.classList.contains('loading')) {
-                            this.classList.remove('loading');
-                            titleElement.textContent = originalTitle;
-                            activeLoadingLinks.delete(this);
-                        }
-                    }, 3000);
-                    loadingTimeouts.push(fallbackTimeout);
                     
                 } else {
                     // Untuk desktop, jalankan efek tanpa prevent default
@@ -1313,27 +1280,17 @@
                     
                     this.appendChild(effect);
                     
-                    // Hapus click effect
-                    const effectTimeout = setTimeout(() => {
+                    // Kombinasikan efek removal dan reset dalam satu timeout
+                    loadingData.timeout = setTimeout(() => {
                         if (effect.parentNode) {
                             effect.remove();
                         }
-                    }, 600);
-                    loadingTimeouts.push(effectTimeout);
-                    
-                    // Reset state setelah delay
-                    const resetTimeout = setTimeout(() => {
-                        if (this.classList.contains('loading')) {
-                            this.classList.remove('loading');
-                            titleElement.textContent = originalTitle;
-                            activeLoadingLinks.delete(this);
-                        }
+                        resetLoadingState(this);
                     }, 1500);
-                    loadingTimeouts.push(resetTimeout);
                 }
             });
             
-            // Handle touch events khusus untuk mobile
+            // Handle touch events khusus untuk mobile dengan pengecekan loading state
             if (isMobileDevice()) {
                 link.addEventListener('touchstart', function(e) {
                     if (!activeLoadingLinks.has(this)) {
@@ -1342,9 +1299,11 @@
                 }, { passive: true });
                 
                 link.addEventListener('touchend', function(e) {
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 150);
+                    if (!activeLoadingLinks.has(this)) {
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    }
                 }, { passive: true });
             }
         });
