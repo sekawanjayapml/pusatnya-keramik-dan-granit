@@ -1,1448 +1,455 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sekawan Jaya Pemalang</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tambahkan SDK EmailJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <style>
-        /* Variabel warna dengan nuansa biru (default light theme) */
-        :root {
-            --dark-blue: #0a1931;
-            --medium-blue: #185adb;
-            --light-blue: #3b82f6;
-            --sky-blue: #dbeafe;
-            --text-color: #1f2937;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --hover-color: #f0f7ff;
-            --accent-gold: #f59e0b;
-            --loading-bg: rgba(59, 130, 246, 0.15);
-            --background: linear-gradient(135deg, var(--dark-blue) 0%, var(--medium-blue) 50%, var(--light-blue) 100%);
-            --profile-bg: rgba(255, 255, 255, 0.15);
-            --profile-border: rgba(255, 255, 255, 0.2);
-            --footer-border: rgba(255, 255, 255, 0.2);
-            --footer-text: var(--sky-blue);
-            --primary: #3b82f6;
-            --primaryT: rgba(59, 130, 246, 0.5);
-            --transDur: 0.3s;
-            --bg: #0a1931;
-        }
-
-        /* Dark theme variables */
-        [data-theme="dark"] {
-            --dark-blue: #0d1f40;
-            --medium-blue: #1e6de3;
-            --light-blue: #2563eb;
-            --sky-blue: #bfdbfe;
-            --text-color: #e5e7eb;
-            --card-bg: rgba(30, 41, 59, 0.95);
-            --hover-color: #1e293b;
-            --loading-bg: rgba(30, 64, 175, 0.3);
-            --background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3730a3 100%);
-            --profile-bg: rgba(30, 41, 59, 0.2);
-            --profile-border: rgba(255, 255, 255, 0.1);
-            --footer-border: rgba(255, 255, 255, 0.1);
-            --footer-text: #c7d2fe;
-            --bg: #0f172a;
-        }
-
-        /* Reset dan gaya dasar */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: var(--background);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease, color 0.3s ease;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        /* Theme Switch by JkHuger */
-        .theme {
-            display: flex;
-            align-items: center;
-            -webkit-tap-highlight-color: transparent;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
-        }
-
-        .theme__fill,
-        .theme__icon {
-            transition: 0.3s;
-        }
-
-        .theme__fill {
-            background-color: var(--bg);
-            display: block;
-            mix-blend-mode: difference;
-            position: fixed;
-            inset: 0;
-            height: 100%;
-            transform: translateX(-100%);
-            z-index: -1;
-        }
-
-        .theme__icon,
-        .theme__toggle {
-            z-index: 1;
-        }
-
-        .theme__icon,
-        .theme__icon-part {
-            position: absolute;
-        }
-
-        .theme__icon {
-            display: block;
-            top: 0.5em;
-            left: 0.5em;
-            width: 1.5em;
-            height: 1.5em;
-        }
-
-        .theme__icon-part {
-            border-radius: 50%;
-            box-shadow: 0.4em -0.4em 0 0.5em hsl(0,0%,100%) inset;
-            top: calc(50% - 0.5em);
-            left: calc(50% - 0.5em);
-            width: 1em;
-            height: 1em;
-            transition: box-shadow var(--transDur) ease-in-out,
-                opacity var(--transDur) ease-in-out,
-                transform var(--transDur) ease-in-out;
-            transform: scale(0.5);
-        }
-
-        .theme__icon-part ~ .theme__icon-part {
-            background-color: hsl(0,0%,100%);
-            border-radius: 0.05em;
-            top: 50%;
-            left: calc(50% - 0.05em);
-            transform: rotate(0deg) translateY(0.5em);
-            transform-origin: 50% 0;
-            width: 0.1em;
-            height: 0.2em;
-        }
-
-        .theme__icon-part:nth-child(3) {
-            transform: rotate(45deg) translateY(0.45em);
-        }
-
-        .theme__icon-part:nth-child(4) {
-            transform: rotate(90deg) translateY(0.45em);
-        }
-
-        .theme__icon-part:nth-child(5) {
-            transform: rotate(135deg) translateY(0.45em);
-        }
-
-        .theme__icon-part:nth-child(6) {
-            transform: rotate(180deg) translateY(0.45em);
-        }
-
-        .theme__icon-part:nth-child(7) {
-            transform: rotate(225deg) translateY(0.45em);
-        }
-
-        .theme__icon-part:nth-child(8) {
-            transform: rotate(270deg) translateY(0.45em);
-        }
-
-        .theme__icon-part:nth-child(9) {
-            transform: rotate(315deg) translateY(0.5em);
-        }
-
-        .theme__label,
-        .theme__toggle,
-        .theme__toggle-wrap {
-            position: relative;
-        }
-
-        .theme__toggle,
-        .theme__toggle:before {
-            display: block;
-        }
-
-        .theme__toggle {
-            background-color: hsl(48,90%,85%);
-            border-radius: 25% / 50%;
-            box-shadow: 0 0 0 0.125em var(--primaryT);
-            padding: 0.25em;
-            width: 6em;
-            height: 3em;
-            -webkit-appearance: none;
-            appearance: none;
-            transition: background-color var(--transDur) ease-in-out,
-                box-shadow 0.15s ease-in-out,
-                transform var(--transDur) ease-in-out;
-            cursor: pointer;
-        }
-
-        .theme__toggle:before {
-            background-color: hsl(48,90%,55%);
-            border-radius: 50%;
-            content: "";
-            width: 2.5em;
-            height: 2.5em;
-            transition: 0.3s;
-        }
-
-        .theme__toggle:focus {
-            box-shadow: 0 0 0 0.125em var(--primary);
-            outline: transparent;
-        }
-
-        /* Checked */
-        .theme__toggle:checked {
-            background-color: hsl(198,90%,15%);
-        }
-
-        .theme__toggle:checked:before,
-        .theme__toggle:checked ~ .theme__icon {
-            transform: translateX(3em);
-        }
-
-        .theme__toggle:checked:before {
-            background-color: hsl(198,90%,55%);
-        }
-
-        .theme__toggle:checked ~ .theme__fill {
-            transform: translateX(0);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(1) {
-            box-shadow: 0.2em -0.2em 0 0.2em hsl(0,0%,100%) inset;
-            transform: scale(1);
-            top: 0.2em;
-            left: -0.2em;
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part ~ .theme__icon-part {
-            opacity: 0;
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(2) {
-            transform: rotate(45deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(3) {
-            transform: rotate(90deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(4) {
-            transform: rotate(135deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(5) {
-            transform: rotate(180deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(6) {
-            transform: rotate(225deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(7) {
-            transform: rotate(270deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(8) {
-            transform: rotate(315deg) translateY(0.8em);
-        }
-
-        .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(9) {
-            transform: rotate(360deg) translateY(0.8em);
-        }
-
-        .theme__toggle-wrap {
-            margin: 0 0.75em;
-        }
-
-        @supports selector(:focus-visible) {
-            .theme__toggle:focus {
-                box-shadow: 0 0 0 0.125em var(--primaryT);
-            }
-
-            .theme__toggle:focus-visible {
-                box-shadow: 0 0 0 0.125em var(--primary);
-            }
-        }
-
-        /* Header dengan profil */
-        .profile {
-            text-align: center;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease;
-            background: var(--profile-bg);
-            padding: 25px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--profile-border);
-            position: relative;
-            overflow: hidden;
-            transition: background 0.3s ease, border 0.3s ease;
-        }
-
-        .profile::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--accept-gold), var(--light-blue), var(--accent-gold));
-            border-radius: 18px;
-            z-index: -1;
-            opacity: 0.5;
-        }
-
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid white;
-            margin-bottom: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .profile h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .profile p {
-            color: var(--sky-blue);
-            font-size: 16px;
-            max-width: 80%;
-            margin: 0 auto;
-            transition: color 0.3s ease;
-        }
-
-        /* Container link */
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .link-item {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid var(--profile-border);
-            animation: slideIn 0.5s ease;
-            animation-fill-mode: both;
-            position: relative;
-            overflow: hidden;
-            min-height: 60px;
-            cursor: pointer;
-        }
-
-        /* Loading state untuk link */
-        .link-item.loading {
-            background: var(--loading-bg) !important;
-            transform: none !important;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-            pointer-events: none;
-        }
-
-        .link-item.loading .link-title {
-            opacity: 0.8;
-            color: var(--medium-blue);
-        }
-
-        .link-item.loading .link-subtitle {
-            opacity: 0.6;
-        }
-
-        .link-item.loading .link-arrow {
-            display: none !important;
-        }
-
-        .link-item.loading .loading-spinner {
-            display: inline-block !important;
-            opacity: 1 !important;
-        }
-
-        .link-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .link-item:hover::before {
-            left: 100%;
-        }
-
-        .link-item:hover, .link-item:active {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            background: var(--hover-color);
-        }
-
-        .link-item.loading:hover, .link-item.loading:active {
-            transform: none;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .link-content {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
-
-        .link-item i {
-            margin-right: 15px;
-            font-size: 24px;
-            width: 30px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .link-text {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .link-title {
-            font-weight: 600;
-            font-size: 16px;
-            transition: opacity 0.3s ease, color 0.3s ease;
-        }
-
-        .link-subtitle {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 2px;
-            transition: opacity 0.3s ease;
-        }
-
-        [data-theme="dark"] .link-subtitle {
-            color: #9ca3af;
-        }
-
-        .link-arrow {
-            font-size: 16px;
-            color: #9ca3af;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .link-item:hover .link-arrow, .link-item:active .link-arrow {
-            transform: translateX(3px);
-        }
-
-        /* Loading spinner */
-        .loading-spinner {
-            display: none;
-            font-size: 16px;
-            color: var(--medium-blue);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Badge untuk link populer */
-        .popular-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--accent-gold);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-           0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-            60% { transform: translateY(-3px); }
-        }
-
-        /* Warna khusus untuk setiap platform */
-        .whatsapp i { color: #25D366; }
-        .tiktok i { color: #000000; }
-        .facebook i { color: #1877F2; }
-        .youtube i { color: #FF0000; }
-        .calculator i { color: #059669; }
-        .catalog i { color: #8B5CF6; }
-        .location i { color: #EF4444; }
-
-        .link-item:hover i, .link-item:active i {
-            transform: scale(1.1);
-        }
-
-        .link-item.loading i {
-            transform: scale(1);
-        }
-
-        /* Feedback Form Styles */
-        .feedback-container {
-            width: 100%;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease;
-        }
-
-        .feedback-form {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--profile-border);
-            transition: all 0.3s ease;
-        }
-
-        .feedback-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: var(--text-color);
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .feedback-title i {
-            color: var(--medium-blue);
-        }
-
-        .feedback-form-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .feedback-input-group {
-            position: relative;
-        }
-
-        .feedback-textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: var(--text-color);
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        [data-theme="dark"] .feedback-textarea {
-            background-color: rgba(30, 41, 59, 0.8);
-            border-color: #4b5563;
-            color: #e5e7eb;
-        }
-
-        .feedback-textarea:focus {
-            outline: none;
-            border-color: var(--medium-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        .feedback-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .feedback-disclaimer {
-            font-size: 11px;
-            color: #6b7280;
-        }
-
-        [data-theme="dark"] .feedback-disclaimer {
-            color: #9ca3af;
-        }
-
-        .feedback-counter {
-            font-size: 11px;
-            color: #6b7280;
-        }
-
-        [data-theme="dark"] .feedback-counter {
-            color: #9ca3af;
-        }
-
-        .feedback-submit {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: var(--medium-blue);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feedback-submit:hover {
-            background: var(--light-blue);
-            transform: translateY(-2px);
-        }
-
-        .feedback-submit:active {
-            transform: translateY(0);
-        }
-
-        .feedback-submit-spinner {
-            display: none;
-            animation: spin 1s linear infinite;
-        }
-
-        .feedback-submit.loading .feedback-submit-text,
-        .feedback-submit.loading .feedback-submit-icon {
-            display: none;
-        }
-
-        .feedback-submit.loading .feedback-submit-spinner {
-            display: block;
-        }
-
-        .feedback-success {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background-color: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
-            color: #10b981;
-            margin-top: 15px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .feedback-error {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background-color: rgba(239, 68, 68, 0.1);
-            border-radius: 8px;
-            color: #ef4444;
-            margin-top: 15px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .feedback-success i,
-        .feedback-error i {
-            font-size: 20px;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: var(--footer-text);
-            font-size: 14px;
-            padding: 15px;
-            border-top: 1px solid var(--footer-border);
-            width: 100%;
-            transition: color 0.3s ease, border 0.3s ease;
-        }
-
-        .footer p:first-of-type {
-            font-size: 11px;
-        }
-
-        /* Animasi */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Efek gelembung latar belakang */
-        .bubbles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000;
-        }
-
-        .bubble {
-            position: absolute;
-            bottom: -100px;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: rise 15s infinite ease-in;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-        }
-
-        @keyframes rise {
-            0% {
-                bottom: -100px;
-                transform: translateX(0) scale(0.5);
-                opacity: 0;
-            }
-            50% {
-                transform: translateX(100px) scale(1.2);
-                opacity: 0.3;
-            }
-            100% {
-                bottom: 1080px;
-                transform: translateX(-200px) scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        /* Click effect */
-        .click-effect {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-            transform: scale(0);
-            animation: clickAnimation 0.6s ease;
-            pointer-events: none;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-        }
-
-        @keyframes clickAnimation {
-            to {
-                transform: scale(1);
-                opacity: 0;
-            }
-        }
-
-        /* Responsivitas */
-        @media (max-width: 600px) {
-            .profile-img {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .profile h1 {
-                font-size: 24px;
-            }
-            
-            .link-item {
-                padding: 14px 18px;
-                min-height: 55px;
-            }
-            
-            body {
-                padding: 15px;
-                justify-content: flex-start;
-            }
-
-            .footer p:first-of-type {
-                font-size: 10px;
-            }
-
-            .theme {
-                top: 15px;
-                right: 15px;
-            }
-
-            .theme__toggle {
-                width: 5em;
-                height: 2.5em;
-            }
-
-            .theme__toggle:before {
-                width: 2em;
-                height: 2em;
-            }
-
-            .theme__toggle:checked:before,
-            .theme__toggle:checked ~ .theme__icon {
-                transform: translateX(2.5em);
-            }
-
-            /* Perbaikan untuk icon matahari/bulan pada mobile */
-            .theme__icon {
-                top: 0.35em;
-                left: 0.35em;
-                width: 1.2em;
-                height: 1.2em;
-            }
-
-            .theme__icon-part {
-                box-shadow: 0.3em -0.3em 0 0.4em hsl(0,0%,100%) inset;
-                width: 0.8em;
-                height: 0.8em;
-            }
-
-            .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(1) {
-                box-shadow: 0.15em -0.15em 0 0.15em hsl(0,0%,100%) inset;
-                top: 0.15em;
-                left: -0.15em;
-            }
-
-            /* Feedback responsive */
-            .feedback-form {
-                padding: 15px;
-            }
-
-            .feedback-title {
-                font-size: 16px;
-            }
-
-            @media (prefers-reduced-motion: reduce) {
-                .bubble, .link-item, .profile, .click-effect, .loading-spinner {
-                    animation: none;
-                    transition: none;
-                }
-            }
-        }
-
-        @media (max-width: 400px) {
-            .profile h1 {
-                font-size: 22px;
-            }
-            
-            .profile p {
-                font-size: 11px;
-                max-width: 100%;
-            }
-            
-            .link-title {
-                font-size: 15px;
-            }
-            
-            .link-subtitle {
-                font-size: 11px;
-            }
-
-            /* Perbaikan tambahan untuk layar sangat kecil */
-            .theme__toggle {
-                width: 4.5em;
-                height: 2.25em;
-            }
-
-            .theme__toggle:before {
-                width: 1.8em;
-                height: 1.8em;
-            }
-
-            .theme__toggle:checked:before,
-            .theme__toggle:checked ~ .theme__icon {
-                transform: translateX(2.25em);
-            }
-
-            .theme__icon {
-                top: 0.3em;
-                left: 0.3em;
-                width: 1em;
-                height: 1em;
-            }
-
-            /* Feedback responsive */
-            .feedback-title {
-                font-size: 15px;
-            }
-
-            .feedback-textarea {
-                font-size: 13px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .profile h1 {
-                font-size: 20px;
-            }
-            
-            .profile p {
-                font-size: 10px;
-                max-width: 100%;
-            }
-
-            /* Feedback responsive */
-            .feedback-title {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 280px) {
-            .profile h1 {
-                font-size: 18px;
-            }
-            
-            .profile p {
-                font-size: 9px;
-                max-width: 100%;
-            }
-
-            /* Perbaikan untuk layar sangat kecil (280px) */
-            .theme {
-                top: 10px;
-                right: 10px;
-            }
-
-            .theme__toggle {
-                width: 4em;
-                height: 2em;
-            }
-
-            .theme__toggle:before {
-                width: 1.6em;
-                height: 1.6em;
-            }
-
-            .theme__toggle:checked:before,
-            .theme__toggle:checked ~ .theme__icon {
-                transform: translateX(2em);
-            }
-
-            .theme__icon {
-                top: 0.25em;
-                left: 0.25em;
-                width: 0.9em;
-                height: 0.9em;
-            }
-
-            /* Feedback responsive */
-            .feedback-title {
-                font-size: 13px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sekawan Jaya Pemalang</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #111827;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --accent: #3b82f6;
+      --whatsapp: #25D366;
+      --tiktok: #000000;
+      --facebook: #1877F2;
+      --youtube: #FF0000;
+      --calculator: #059669;
+      --catalog: #8B5CF6;
+      --location: #EF4444;
+      --shadow: rgba(0,0,0,0.05);
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --text: #f9fafb;
+      --card: #1f2937;
+      --border: #374151;
+      --shadow: rgba(0,0,0,0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background 0.3s, color 0.3s;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .profile {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 12px;
+      border: 2px solid var(--border);
+    }
+
+    .profile h1 {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .profile p {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .link-item:hover {
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    /* ✅ Efek saat diklik (tanda visual) */
+    .link-item:active {
+      background: rgba(59, 130, 246, 0.2) !important;
+      transform: scale(0.98);
+    }
+
+    .link-icon {
+      width: 24px;
+      text-align: center;
+      margin-right: 12px;
+      font-size: 18px;
+    }
+    .whatsapp .link-icon { color: var(--whatsapp); }
+    .tiktok .link-icon { color: var(--tiktok); }
+    .facebook .link-icon { color: var(--facebook); }
+    .youtube .link-icon { color: var(--youtube); }
+    .calculator .link-icon { color: var(--calculator); }
+    .catalog .link-icon { color: var(--catalog); }
+    .location .link-icon { color: var(--location); }
+
+    .link-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .link-subtitle {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    /* === Feedback Form === */
+    .feedback-container {
+      width: 100%;
+      margin-bottom: 24px;
+    }
+    .feedback-form {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .feedback-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .feedback-title i {
+      color: var(--accent);
+    }
+    .feedback-textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      transition: border-color 0.3s;
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    .feedback-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    [data-theme="dark"] .feedback-info {
+      color: #9ca3af;
+    }
+    .feedback-counter {
+      color: #6b7280;
+    }
+    [data-theme="dark"] .feedback-counter {
+      color: #9ca3af;
+    }
+    .feedback-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .feedback-submit:hover {
+      background: #2563eb;
+    }
+    .feedback-submit.loading {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    .feedback-submit-spinner {
+      display: none;
+      animation: spin 1s linear infinite;
+    }
+    .feedback-submit.loading .feedback-submit-text,
+    .feedback-submit.loading .feedback-submit-icon {
+      display: none;
+    }
+    .feedback-submit.loading .feedback-submit-spinner {
+      display: inline-block;
+    }
+    .feedback-success,
+    .feedback-error {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .feedback-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+    .feedback-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.7;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .profile-img { width: 90px; height: 90px; }
+      .profile h1 { font-size: 22px; }
+      .link-item { padding: 12px 14px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="bubbles" id="bubbles"></div>
+  <button class="theme-toggle" id="theme-btn" aria-label="Toggle tema">
+    <i class="fas fa-moon"></i>
+  </button>
 
-    <!-- Theme Switch by JkHuger -->
-    <div class="theme">
-        <div class="theme__toggle-wrap">
-            <input class="theme__toggle" type="checkbox" id="theme-toggle" aria-label="Toggle theme">
-            <div class="theme__icon">
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-                <div class="theme__icon-part"></div>
-            </div>
-        </div>
-        <div class="theme__fill"></div>
+  <div class="container">
+    <div class="profile">
+      <img src="https://i.imgur.com/EUqsSFH.png" alt="Logo Sekawan Jaya" class="profile-img" />
+      <h1>SEKAWAN JAYA</h1>
+      <p>PUSATNYA KERAMIK DAN GRANIT</p>
     </div>
 
-    <div class="container">
-        <div class="profile">
-            <img src="https://i.imgur.com/EUqsSFH.png" alt="Logo Sekawan Jaya" class="profile-img">
-            <h1>SEKAWAN JAYA</h1>
-            <p>PUSATNYA KERAMIK DAN GRANIT</p>
+    <div class="links">
+      <a href="https://wa.me/6288216124228" class="link-item whatsapp" target="_blank">
+        <span class="link-icon"><i class="fab fa-whatsapp"></i></span>
+        <div class="link-text">
+          <div>Hubungi WhatsApp</div>
+          <div class="link-subtitle">Chat langsung dengan CS kami</div>
         </div>
-
-        <div class="links">
-            <a href="https://wa.me/6288216124228" class="link-item whatsapp" target="_blank" data-platform="WhatsApp">
-                <div class="popular-badge">!</div>
-                <div class="link-content">
-                    <i class="fab fa-whatsapp"></i>
-                    <div class="link-text">
-                        <span class="link-title">Hubungi WhatsApp</span>
-                        <span class="link-subtitle">Chat langsung dengan CS kami</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
-
-            <a href="https://sekawanjayapml.github.io/catalog/kalkulator" class="link-item calculator" target="_blank" data-platform="Kalkulator">
-                <div class="link-content">
-                    <i class="fas fa-calculator"></i>
-                    <div class="link-text">
-                        <span class="link-title">Kalkulator Keramik</span>
-                        <span class="link-subtitle">Hitung kebutuhan dengan akurat</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
-
-            <a href="https://tiktok.com/@sekawanjayapemalang" class="link-item tiktok" target="_blank" data-platform="TikTok">
-                <div class="link-content">
-                    <i class="fab fa-tiktok"></i>
-                    <div class="link-text">
-                        <span class="link-title">TikTok</span>
-                        <span class="link-subtitle">Ikuti update terbaru</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
-
-            <a href="https://facebook.com/61580002512516/" class="link-item facebook" target="_blank" data-platform="Facebook">
-                <div class="link-content">
-                    <i class="fab fa-facebook"></i>
-                    <div class="link-text">
-                        <span class="link-title">Facebook</span>
-                        <span class="link-subtitle">Ikuti update terbaru</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
-
-            <a href="http://www.youtube.com/@sekawanjayapemalang" class="link-item youtube" target="_blank" data-platform="YouTube">
-                <div class="link-content">
-                    <i class="fab fa-youtube"></i>
-                    <div class="link-text">
-                        <span class="link-title">Youtube</span>
-                        <span class="link-subtitle">Ikuti update terbaru</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
-
-            <a href="https://sekawanjayapml.github.io/catalog" class="link-item catalog" target="_blank" data-platform="Katalog">
-                <div class="link-content">
-                    <i class="fas fa-book-open"></i>
-                    <div class="link-text">
-                        <span class="link-title">Katalog Produk</span>
-                        <span class="link-subtitle">Lihat koleksi terbaru kami</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
-
-            <a href="https://maps.app.goo.gl/ZTfHT1hDbaLdrn1MA" class="link-item location" target="_blank" data-platform="Lokasi">
-                <div class="link-content">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div class="link-text">
-                        <span class="link-title">Kunjungi Showroom</span>
-                        <span class="link-subtitle">Jl. Dokter Cipto Mangunkusumo No.36, Pemalang</span>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-                <i class="fas fa-spinner loading-spinner"></i>
-            </a>
+      </a>
+      <a href="https://sekawanjayapml.github.io/catalog/kalkulator" class="link-item calculator" target="_blank">
+        <span class="link-icon"><i class="fas fa-calculator"></i></span>
+        <div class="link-text">
+          <div>Kalkulator Keramik</div>
+          <div class="link-subtitle">Hitung kebutuhan dengan akurat</div>
         </div>
-
-        <!-- Feedback Form -->
-        <div class="feedback-container">
-            <div class="feedback-form">
-                <h3 class="feedback-title">
-                    <i class="fas fa-comment-dots"></i>
-                    Kritik & Saran
-                </h3>
-                <form id="feedback-form" class="feedback-form-content">
-                    <div class="feedback-input-group">
-                        <textarea 
-                            id="feedback-message" 
-                            class="feedback-textarea" 
-                            placeholder="Tulis kritik atau saran Anda di sini... (100% anonim, dikirim via email tanpa menyimpan data pribadi)"
-                            maxlength="500"
-                            rows="4"
-                        ></textarea>
-                        <div class="feedback-info">
-                            <span class="feedback-disclaimer">Feedback dikirim anonim dan tidak menyimpan data pribadi Anda</span>
-                            <span class="feedback-counter">0/500</span>
-                        </div>
-                    </div>
-                    <button type="submit" class="feedback-submit" id="feedback-submit">
-                        <span class="feedback-submit-text">Kirim Feedback</span>
-                        <i class="fas fa-paper-plane feedback-submit-icon"></i>
-                        <i class="fas fa-spinner feedback-submit-spinner"></i>
-                    </button>
-                </form>
-                <div class="feedback-success" id="feedback-success">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Terima kasih! Feedback Anda telah dikirim.</span>
-                </div>
-                <div class="feedback-error" id="feedback-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>Maaf, terjadi kesalahan. Silakan coba lagi.</span>
-                </div>
-            </div>
+      </a>
+      <a href="https://tiktok.com/@sekawanjayapemalang" class="link-item tiktok" target="_blank">
+        <span class="link-icon"><i class="fab fa-tiktok"></i></span>
+        <div class="link-text">
+          <div>TikTok</div>
+          <div class="link-subtitle">Ikuti update terbaru</div>
         </div>
-
-        <div class="footer">
-            <p>© Copyright 2025, Sekawan Jaya. All Rights Reserved.</p>
+      </a>
+      <a href="https://facebook.com/61580002512516/" class="link-item facebook" target="_blank">
+        <span class="link-icon"><i class="fab fa-facebook"></i></span>
+        <div class="link-text">
+          <div>Facebook</div>
+          <div class="link-subtitle">Ikuti update terbaru</div>
         </div>
+      </a>
+      <a href="https://youtube.com/@sekawanjaya" class="link-item youtube" target="_blank">
+        <span class="link-icon"><i class="fab fa-youtube"></i></span>
+        <div class="link-text">
+          <div>YouTube</div>
+          <div class="link-subtitle">Ikuti update terbaru</div>
+        </div>
+      </a>
+      <a href="https://sekawanjayapml.github.io/catalog" class="link-item catalog" target="_blank">
+        <span class="link-icon"><i class="fas fa-book-open"></i></span>
+        <div class="link-text">
+          <div>Katalog Produk</div>
+          <div class="link-subtitle">Lihat koleksi terbaru kami</div>
+        </div>
+      </a>
+      <a href="https://maps.app.goo.gl/YnCYXvS96K9WP9PYA" class="link-item location" target="_blank">
+        <span class="link-icon"><i class="fas fa-map-marker-alt"></i></span>
+        <div class="link-text">
+          <div>Kunjungi Showroom</div>
+          <div class="link-subtitle">Jl. Dokter Cipto Mangunkusumo No.36, Pemalang</div>
+        </div>
+      </a>
     </div>
 
-    <script>
-        // Inisialisasi EmailJS
-        // Ganti YOUR_PUBLIC_KEY dengan public key Anda dari EmailJS
-        (function() {
-            emailjs.init("vQEncuGNYSx5Prr_n");
-        })();
+    <div class="feedback-container">
+      <div class="feedback-form">
+        <h3 class="feedback-title">
+          <i class="fas fa-comment-dots"></i>
+          Kritik & Saran
+        </h3>
+        <form id="feedback-form">
+          <div class="feedback-input-group">
+            <textarea 
+              id="feedback-message" 
+              class="feedback-textarea" 
+              placeholder="Tulis kritik atau saran Anda di sini... (100% anonim, dikirim via email tanpa menyimpan data pribadi)"
+              maxlength="500"
+              rows="4"
+            ></textarea>
+            <div class="feedback-info">
+              <span class="feedback-disclaimer">Feedback dikirim anonim dan tidak menyimpan data pribadi Anda</span>
+              <span class="feedback-counter">0/500</span>
+            </div>
+          </div>
+          <button type="submit" class="feedback-submit" id="feedback-submit">
+            <span class="feedback-submit-text">Kirim Feedback</span>
+            <i class="fas fa-paper-plane feedback-submit-icon"></i>
+            <i class="fas fa-spinner feedback-submit-spinner"></i>
+          </button>
+        </form>
+        <div class="feedback-success" id="feedback-success">
+          <i class="fas fa-check-circle"></i>
+          <span>Terima kasih! Feedback Anda telah dikirim.</span>
+        </div>
+        <div class="feedback-error" id="feedback-error">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>Maaf, terjadi kesalahan. Silakan coba lagi.</span>
+        </div>
+      </div>
+    </div>
 
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        // Set initial theme based on system preference or saved preference
-        const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeToggle.checked = true;
-        }
-        
-        // Toggle theme when switch is clicked
-        themeToggle.addEventListener('change', function() {
-            if (this.checked) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+    <div class="footer">
+      © 2025 Sekawan Jaya. All Rights Reserved.
+    </div>
+  </div>
 
-        // Membuat efek gelembung
-        function createBubbles() {
-            const bubblesContainer = document.getElementById('bubbles');
-            const bubbleCount = window.innerWidth < 600 ? 10 : 15;
-            
-            for (let i = 0; i < bubbleCount; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                
-                const posX = Math.random() * 100;
-                bubble.style.left = `${posX}%`;
-                
-                const size = Math.random() * 30 + 20;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                
-                const animationDuration = Math.random() * 15 + 10;
-                bubble.style.animationDuration = `${animationDuration}s`;
-                
-                const delay = Math.random() * 10;
-                bubble.style.animationDelay = `${delay}s`;
-                
-                bubblesContainer.appendChild(bubble);
-            }
-        }
+  <script>
+    // Theme toggle
+    const btn = document.getElementById('theme-btn');
+    const isDark = localStorage.getItem('theme') === 'dark' || 
+                   window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      btn.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+    btn.addEventListener('click', () => {
+      const isDarkNow = document.documentElement.hasAttribute('data-theme');
+      if (isDarkNow) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        btn.innerHTML = '<i class="fas fa-moon"></i>';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+    });
 
-        // Deteksi perangkat mobile
-        function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-                || window.innerWidth <= 768;
-        }
+    // EmailJS
+    emailjs.init("vQEncuGNYSx5Prr_n");
+    const feedbackForm = document.getElementById('feedback-form');
+    const feedbackMessage = document.getElementById('feedback-message');
+    const feedbackCounter = document.querySelector('.feedback-counter');
+    const feedbackSubmit = document.getElementById('feedback-submit');
+    const feedbackSuccess = document.getElementById('feedback-success');
+    const feedbackError = document.getElementById('feedback-error');
 
-        // State management yang diperbaiki - menggunakan Map untuk tracking yang lebih detail
-        let activeLoadingLinks = new Map();
+    feedbackMessage.addEventListener('input', () => {
+      const len = feedbackMessage.value.length;
+      feedbackCounter.textContent = `${len}/500`;
+      if (len > 450) feedbackCounter.style.color = '#ef4444';
+      else if (len > 400) feedbackCounter.style.color = '#f59e0b';
+      else feedbackCounter.style.color = '';
+    });
 
-        // Fungsi untuk reset loading state pada link tertentu
-        function resetLoadingState(linkElement) {
-            if (!linkElement) return;
-            
-            const linkData = activeLoadingLinks.get(linkElement);
-            if (!linkData) return;
-            
-            // Clear timeout jika ada
-            if (linkData.timeout) {
-                clearTimeout(linkData.timeout);
-            }
-            
-            // Reset visual state
-            linkElement.classList.remove('loading');
-            const titleElement = linkElement.querySelector('.link-title');
-            if (titleElement && linkData.originalTitle) {
-                titleElement.textContent = linkData.originalTitle;
-            }
-            
-            // Remove from active links
-            activeLoadingLinks.delete(linkElement);
-        }
+    feedbackForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const msg = feedbackMessage.value.trim();
+      if (msg.length < 10) {
+        alert('Minimal 10 karakter.');
+        return;
+      }
 
-        // Event listener dengan debouncing untuk mencegah multiple triggers yang tidak perlu
-        let visibilityTimeout;
-        document.addEventListener('visibilitychange', function() {
-            // Hanya reset jika halaman benar-benar ditinggalkan dan kembali
-            if (!document.hidden) {
-                clearTimeout(visibilityTimeout);
-                visibilityTimeout = setTimeout(() => {
-                    // Hanya reset jika ada indikasi user benar-benar kembali dari navigasi
-                    if (performance.navigation && performance.navigation.type === 2) {
-                        activeLoadingLinks.forEach((data, link) => resetLoadingState(link));
-                    }
-                }, 500);
-            }
-        });
+      feedbackSubmit.classList.add('loading');
+      feedbackSuccess.style.display = 'none';
+      feedbackError.style.display = 'none';
 
-        // Handle link click dengan logic yang diperbaiki
-        document.querySelectorAll('.link-item').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const platform = this.getAttribute('data-platform');
-                const titleElement = this.querySelector('.link-title');
-                const originalTitle = titleElement.textContent;
-                const isMobile = isMobileDevice();
-                const linkHref = this.href;
-                
-                // Jika sudah dalam loading state, ignore click
-                if (activeLoadingLinks.has(this)) {
-                    e.preventDefault();
-                    return;
-                }
-                
-                // Simpan data loading dengan original title dan timeout reference
-                const loadingData = {
-                    originalTitle: originalTitle,
-                    timeout: null,
-                    startTime: Date.now()
-                };
-                activeLoadingLinks.set(this, loadingData);
-                
-                // Untuk mobile, buat efek lebih cepat dan langsung
-                if (isMobile) {
-                    // Prevent default untuk mobile agar bisa show loading
-                    e.preventDefault();
-                    
-                    // Tambah loading state langsung
-                    this.classList.add('loading');
-                    titleElement.textContent = `Membuka ${platform}...`;
-                    
-                    // Buat click effect
-                    const effect = document.createElement('div');
-                    effect.className = 'click-effect';
-                    
-                    const rect = this.getBoundingClientRect();
-                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                    
-                    effect.style.left = `${clientX - rect.left - 50}px`;
-                    effect.style.top = `${clientY - rect.top - 50}px`;
-                    
-                    this.appendChild(effect);
-                    
-                    // Kombinasikan efek removal dan navigasi dalam satu timeout
-                    loadingData.timeout = setTimeout(() => {
-                        if (effect.parentNode) {
-                            effect.remove();
-                        }
-                        
-                        // Pastikan masih dalam loading state sebelum navigasi
-                        if (activeLoadingLinks.has(this)) {
-                            window.location.href = linkHref;
-                        }
-                    }, 600);
-                    
-                } else {
-                    // Untuk desktop, jalankan efek tanpa prevent default
-                    this.classList.add('loading');
-                    titleElement.textContent = `Membuka ${platform}...`;
-                    
-                    // Buat click effect
-                    const effect = document.createElement('div');
-                    effect.className = 'click-effect';
-                    
-                    const rect = this.getBoundingClientRect();
-                    effect.style.left = `${e.clientX - rect.left - 50}px`;
-                    effect.style.top = `${e.clientY - rect.top - 50}px`;
-                    
-                    this.appendChild(effect);
-                    
-                    // Kombinasikan efek removal dan reset dalam satu timeout
-                    loadingData.timeout = setTimeout(() => {
-                        if (effect.parentNode) {
-                            effect.remove();
-                        }
-                        resetLoadingState(this);
-                    }, 1500);
-                }
-            });
-            
-            // Handle touch events khusus untuk mobile dengan pengecekan loading state
-            if (isMobileDevice()) {
-                link.addEventListener('touchstart', function(e) {
-                    if (!activeLoadingLinks.has(this)) {
-                        this.style.transform = 'translateY(-2px)';
-                    }
-                }, { passive: true });
-                
-                link.addEventListener('touchend', function(e) {
-                    if (!activeLoadingLinks.has(this)) {
-                        setTimeout(() => {
-                            this.style.transform = '';
-                        }, 150);
-                    }
-                }, { passive: true });
-            }
-        });
-
-        // Feedback form functionality
-        const feedbackForm = document.getElementById('feedback-form');
-        const feedbackMessage = document.getElementById('feedback-message');
-        const feedbackCounter = document.querySelector('.feedback-counter');
-        const feedbackSubmit = document.getElementById('feedback-submit');
-        const feedbackSuccess = document.getElementById('feedback-success');
-        const feedbackError = document.getElementById('feedback-error');
-
-        // Character counter
-        feedbackMessage.addEventListener('input', function() {
-            const charCount = this.value.length;
-            feedbackCounter.textContent = `${charCount}/500`;
-            
-            if (charCount > 450) {
-                feedbackCounter.style.color = '#ef4444';
-            } else if (charCount > 400) {
-                feedbackCounter.style.color = '#f59e0b';
-            } else {
-                feedbackCounter.style.color = '';
-            }
-        });
-
-        // Form submission dengan EmailJS
-        feedbackForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const message = feedbackMessage.value.trim();
-            
-            if (message.length < 10) {
-                alert('Pesan terlalu pendek. Silakan tulis minimal 10 karakter.');
-                return;
-            }
-            
-            // Show loading state
-            feedbackSubmit.classList.add('loading');
-            feedbackSuccess.style.display = 'none';
-            feedbackError.style.display = 'none';
-            
-            // Kirim email menggunakan EmailJS
-            emailjs.send(
-                'service_grynllw', // Ganti dengan Service ID Anda
-                'template_g16eo9k', // Ganti dengan Template ID Anda
-                {
-                    message: message,
-                    from_name: 'Anonymous User',
-                    to_email: 'muhammadrizqoa@gmail.com' // Ganti dengan email penerima
-                }
-            )
-            .then(function(response) {
-                console.log('SUCCESS!', response.status, response.text);
-                
-                // Hide loading state
-                feedbackSubmit.classList.remove('loading');
-                
-                // Show success message
-                feedbackSuccess.style.display = 'flex';
-                
-                // Reset form
-                feedbackMessage.value = '';
-                feedbackCounter.textContent = '0/500';
-                feedbackCounter.style.color = '';
-                
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    feedbackSuccess.style.display = 'none';
-                }, 5000);
-            }, function(error) {
-                console.log('FAILED...', error);
-                
-                // Hide loading state
-                feedbackSubmit.classList.remove('loading');
-                
-                // Show error message
-                feedbackError.style.display = 'flex';
-                
-                // Hide error message after 5 seconds
-                setTimeout(() => {
-                    feedbackError.style.display = 'none';
-                }, 5000);
-            });
-        });
-
-        // Inisialisasi saat halaman dimuat
-        window.addEventListener('load', () => {
-            createBubbles();
-            
-            // Animasi link dengan delay bertahap
-            document.querySelectorAll('.link-item').forEach((link, index) => {
-                link.style.animationDelay = `${index * 0.1}s`;
-            });
-        });
-
-        // Mencegah zoom pada input
-        document.addEventListener('touchstart', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-    </script>
+      emailjs.send('service_grynllw', 'template_g16eo9k', {
+        message: msg,
+        to_email: 'muhammadrizqoa@gmail.com'
+      }).then(() => {
+        feedbackSubmit.classList.remove('loading');
+        feedbackSuccess.style.display = 'flex';
+        feedbackMessage.value = '';
+        feedbackCounter.textContent = '0/500';
+        feedbackCounter.style.color = '';
+        setTimeout(() => feedbackSuccess.style.display = 'none', 5000);
+      }).catch(() => {
+        feedbackSubmit.classList.remove('loading');
+        feedbackError.style.display = 'flex';
+        setTimeout(() => feedbackError.style.display = 'none', 5000);
+      });
+    });
+  </script>
 </body>
 </html>
-
-
 
