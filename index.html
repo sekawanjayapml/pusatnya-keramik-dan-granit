@@ -3,397 +3,504 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Sekawan Jaya Pemalang</title>
+  <title>Sekawan Jaya · Keramik & Granit</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
-    :root {
-      --bg: #f9fafb;
-      --text: #111827;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --accent: #3b82f6;
-      --whatsapp: #25D366;
-      --tiktok: #000000;
-      --facebook: #1877F2;
-      --youtube: #FF0000;
-      --calculator: #059669;
-      --catalog: #8B5CF6;
-      --location: #EF4444;
-      --shadow: rgba(0,0,0,0.05);
-    }
-    [data-theme="dark"] {
-      --bg: #111827;
-      --text: #f9fafb;
-      --card: #1f2937;
-      --border: #374151;
-      --shadow: rgba(0,0,0,0.2);
-    }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      padding: 20px;
+      background: #f8faff;
+      background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.03) 0%, rgba(255,255,255,0) 70%);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 24px 16px;
+      color: #0b1b33;
       transition: background 0.3s, color 0.3s;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
+    }
+
+    [data-theme="dark"] body {
+      background: #0f172a;
+      background-image: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.06) 0%, rgba(15, 23, 42, 0) 70%);
+      color: #eef2ff;
     }
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
     }
 
+    /* theme toggle */
     .theme-toggle {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text);
+      top: 0;
+      right: 0;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 40px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 18px;
+      color: #1e293b;
       cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      z-index: 10;
+    }
+    [data-theme="dark"] .theme-toggle {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-color: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.04);
+    }
+
+    /* glass card profile */
+    .glass-card {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 32px;
+      padding: 32px 24px 28px;
+      box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -6px rgba(0,20,40,0.02);
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+      margin-top: 12px;
+    }
+    [data-theme="dark"] .glass-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-color: rgba(255,255,255,0.04);
+      box-shadow: 0 20px 50px -12px rgba(0,0,0,0.4);
     }
 
     .profile {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
-
     .profile-img {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 12px;
-      border: 2px solid var(--border);
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.08);
+      border: 2px solid rgba(255,255,255,0.6);
+      transition: transform 0.2s;
     }
-
     .profile h1 {
-      font-size: 24px;
-      margin-bottom: 4px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #0b1b33 0%, #1e3a6f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-
+    [data-theme="dark"] .profile h1 {
+      background: linear-gradient(135deg, #eef2ff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .profile p {
-      font-size: 14px;
-      opacity: 0.8;
+      font-size: 15px;
+      font-weight: 400;
+      color: #475569;
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+    [data-theme="dark"] .profile p {
+      color: #94a3b8;
     }
 
+    /* buttons */
     .links {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 14px;
+      margin-bottom: 28px;
     }
 
     .link-item {
       display: flex;
       align-items: center;
-      padding: 14px 16px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 24px;
       text-decoration: none;
-      color: var(--text);
+      color: #0b1b33;
       font-weight: 500;
-      transition: background 0.2s, transform 0.1s;
+      font-size: 15px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+      gap: 14px;
+    }
+    [data-theme="dark"] .link-item {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-color: rgba(255,255,255,0.04);
+      color: #eef2ff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .link-item:hover {
-      background: rgba(59, 130, 246, 0.05);
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.8);
+      border-color: rgba(59,130,246,0.15);
+      box-shadow: 0 12px 28px -8px rgba(59,130,246,0.08);
+    }
+    [data-theme="dark"] .link-item:hover {
+      background: rgba(51, 65, 85, 0.6);
+      border-color: rgba(56, 189, 248, 0.15);
+      box-shadow: 0 12px 28px -8px rgba(56,189,248,0.06);
     }
 
-    /* ✅ Efek saat diklik (tanda visual) */
     .link-item:active {
-      background: rgba(59, 130, 246, 0.2) !important;
-      transform: scale(0.98);
+      transform: scale(0.97);
+      transition-duration: 0.05s;
     }
 
     .link-icon {
-      width: 24px;
-      text-align: center;
-      margin-right: 12px;
-      font-size: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: background 0.2s;
     }
-    .whatsapp .link-icon { color: var(--whatsapp); }
-    .tiktok .link-icon { color: var(--tiktok); }
-    .facebook .link-icon { color: var(--facebook); }
-    .youtube .link-icon { color: var(--youtube); }
-    .calculator .link-icon { color: var(--calculator); }
-    .catalog .link-icon { color: var(--catalog); }
-    .location .link-icon { color: var(--location); }
+
+    /* warna ikon lembut */
+    .whatsapp .link-icon { background: rgba(37, 211, 102, 0.12); color: #0e8f4a; }
+    .calculator .link-icon { background: rgba(5, 150, 105, 0.10); color: #047857; }
+    .catalog .link-icon { background: rgba(139, 92, 246, 0.10); color: #7c3aed; }
+    .tiktok .link-icon { background: rgba(0, 0, 0, 0.04); color: #1a1a1a; }
+    .facebook .link-icon { background: rgba(24, 119, 242, 0.08); color: #1877F2; }
+    .youtube .link-icon { background: rgba(255, 0, 0, 0.07); color: #c00; }
+    .location .link-icon { background: rgba(239, 68, 68, 0.08); color: #dc2626; }
+
+    [data-theme="dark"] .whatsapp .link-icon { background: rgba(37, 211, 102, 0.15); color: #34d399; }
+    [data-theme="dark"] .calculator .link-icon { background: rgba(5, 150, 105, 0.15); color: #34d399; }
+    [data-theme="dark"] .catalog .link-icon { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+    [data-theme="dark"] .tiktok .link-icon { background: rgba(255,255,255,0.04); color: #cbd5e1; }
+    [data-theme="dark"] .facebook .link-icon { background: rgba(24, 119, 242, 0.15); color: #60a5fa; }
+    [data-theme="dark"] .youtube .link-icon { background: rgba(255, 0, 0, 0.12); color: #f87171; }
+    [data-theme="dark"] .location .link-icon { background: rgba(239, 68, 68, 0.12); color: #f87171; }
 
     .link-text {
       flex: 1;
-      font-size: 15px;
     }
-
-    .link-subtitle {
+    .link-text .title {
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.3;
+    }
+    .link-text .sub {
       font-size: 12px;
       opacity: 0.7;
+      font-weight: 400;
       margin-top: 2px;
     }
-
-    /* === Feedback Form === */
-    .feedback-container {
-      width: 100%;
-      margin-bottom: 24px;
+    .link-arrow {
+      opacity: 0.3;
+      font-size: 14px;
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .feedback-form {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px var(--shadow);
-      border: 1px solid var(--border);
+    .link-item:hover .link-arrow {
+      opacity: 0.8;
+      transform: translateX(2px);
+    }
+
+    /* feedback premium */
+    .feedback-container {
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
+    .feedback-card {
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 28px;
+      padding: 24px 20px 22px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    [data-theme="dark"] .feedback-card {
+      background: rgba(30, 41, 59, 0.3);
+      border-color: rgba(255,255,255,0.03);
     }
     .feedback-title {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 15px;
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      margin-bottom: 16px;
+      color: #0b1b33;
+    }
+    [data-theme="dark"] .feedback-title {
+      color: #eef2ff;
     }
     .feedback-title i {
-      color: var(--accent);
+      color: #3b82f6;
     }
     .feedback-textarea {
       width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
+      padding: 14px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(0,0,0,0.04);
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #0b1b33;
       font-size: 14px;
       resize: vertical;
-      min-height: 100px;
-      transition: border-color 0.3s;
+      min-height: 90px;
+      transition: all 0.25s;
+      font-family: 'Inter', sans-serif;
+    }
+    [data-theme="dark"] .feedback-textarea {
+      background: rgba(15, 23, 42, 0.5);
+      border-color: rgba(255,255,255,0.04);
+      color: #eef2ff;
     }
     .feedback-textarea:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
     }
     .feedback-info {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-top: 5px;
+      margin-top: 8px;
       font-size: 11px;
-      color: #6b7280;
+      color: #64748b;
+      padding: 0 4px;
     }
     [data-theme="dark"] .feedback-info {
-      color: #9ca3af;
-    }
-    .feedback-counter {
-      color: #6b7280;
-    }
-    [data-theme="dark"] .feedback-counter {
-      color: #9ca3af;
+      color: #94a3b8;
     }
     .feedback-submit {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 20px;
-      background: var(--accent);
+      padding: 12px 28px;
+      background: #0b1b33;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 40px;
       font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background 0.2s;
+      transition: all 0.2s;
+      margin-top: 14px;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+    }
+    [data-theme="dark"] .feedback-submit {
+      background: #eef2ff;
+      color: #0f172a;
     }
     .feedback-submit:hover {
-      background: #2563eb;
+      background: #1e3a6f;
+      transform: scale(1.01);
     }
-    .feedback-submit.loading {
-      pointer-events: none;
-      opacity: 0.9;
+    [data-theme="dark"] .feedback-submit:hover {
+      background: #ffffff;
     }
-    .feedback-submit-spinner {
-      display: none;
-      animation: spin 1s linear infinite;
+    .feedback-submit:active {
+      transform: scale(0.97);
     }
+    .feedback-submit.loading { pointer-events: none; opacity: 0.8; }
+    .feedback-submit-spinner { display: none; animation: spin 0.8s linear infinite; }
     .feedback-submit.loading .feedback-submit-text,
-    .feedback-submit.loading .feedback-submit-icon {
-      display: none;
-    }
-    .feedback-submit.loading .feedback-submit-spinner {
-      display: inline-block;
-    }
-    .feedback-success,
-    .feedback-error {
+    .feedback-submit.loading .feedback-submit-icon { display: none; }
+    .feedback-submit.loading .feedback-submit-spinner { display: inline-block; }
+    .feedback-success, .feedback-error {
       display: none;
       align-items: center;
-      gap: 10px;
-      padding: 15px;
-      margin-top: 15px;
-      border-radius: 8px;
-      font-size: 14px;
+      gap: 8px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 500;
     }
-    .feedback-success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
-    }
-    .feedback-error {
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    .feedback-success { background: rgba(16,185,129,0.08); color: #0b7e5a; }
+    .feedback-error { background: rgba(239,68,68,0.06); color: #b91c1c; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .footer {
       text-align: center;
       font-size: 12px;
-      opacity: 0.7;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      width: 100%;
+      opacity: 0.5;
+      padding-top: 20px;
+      letter-spacing: 0.02em;
+    }
+    [data-theme="dark"] .footer {
+      color: #94a3b8;
     }
 
+    /* responsif */
     @media (max-width: 480px) {
-      .profile-img { width: 90px; height: 90px; }
-      .profile h1 { font-size: 22px; }
-      .link-item { padding: 12px 14px; }
+      .glass-card { padding: 24px 16px 20px; }
+      .profile-img { width: 100px; height: 100px; }
+      .profile h1 { font-size: 24px; }
+      .link-item { padding: 14px 16px; }
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" id="theme-btn" aria-label="Toggle tema">
-    <i class="fas fa-moon"></i>
-  </button>
-
   <div class="container">
-    <div class="profile">
-      <img src="https://i.imgur.com/EUqsSFH.png" alt="Logo Sekawan Jaya" class="profile-img" />
-      <h1>SEKAWAN JAYA</h1>
-      <p>PUSATNYA KERAMIK DAN GRANIT</p>
-    </div>
+    <button class="theme-toggle" id="theme-btn" aria-label="Toggle tema">
+      <i class="fas fa-moon"></i>
+    </button>
 
-    <div class="links">
-      <a href="https://wa.me/6288216124228" class="link-item whatsapp" target="_blank">
-        <span class="link-icon"><i class="fab fa-whatsapp"></i></span>
-        <div class="link-text">
-          <div>Hubungi WhatsApp</div>
-          <div class="link-subtitle">Chat langsung dengan CS kami</div>
-        </div>
-      </a>
-      <a href="https://sekawanjayapml.github.io/catalog/kalkulator" class="link-item calculator" target="_blank">
-        <span class="link-icon"><i class="fas fa-calculator"></i></span>
-        <div class="link-text">
-          <div>Kalkulator Keramik</div>
-          <div class="link-subtitle">Hitung kebutuhan dengan akurat</div>
-        </div>
-      </a>
-      <a href="https://tiktok.com/@sekawanjayapemalang" class="link-item tiktok" target="_blank">
-        <span class="link-icon"><i class="fab fa-tiktok"></i></span>
-        <div class="link-text">
-          <div>TikTok</div>
-          <div class="link-subtitle">Ikuti update terbaru</div>
-        </div>
-      </a>
-      <a href="https://facebook.com/61580002512516/" class="link-item facebook" target="_blank">
-        <span class="link-icon"><i class="fab fa-facebook"></i></span>
-        <div class="link-text">
-          <div>Facebook</div>
-          <div class="link-subtitle">Ikuti update terbaru</div>
-        </div>
-      </a>
-      <a href="https://youtube.com/@sekawanjayapemalang" class="link-item youtube" target="_blank">
-        <span class="link-icon"><i class="fab fa-youtube"></i></span>
-        <div class="link-text">
-          <div>YouTube</div>
-          <div class="link-subtitle">Ikuti update terbaru</div>
-        </div>
-      </a>
-      <a href="https://sekawanjayapml.github.io/catalog" class="link-item catalog" target="_blank">
-        <span class="link-icon"><i class="fas fa-book-open"></i></span>
-        <div class="link-text">
-          <div>Katalog Produk</div>
-          <div class="link-subtitle">Lihat koleksi terbaru kami</div>
-        </div>
-      </a>
-      <a href="https://maps.app.goo.gl/2RNNvL2xbbCwzUcG6" class="link-item location" target="_blank">
-        <span class="link-icon"><i class="fas fa-map-marker-alt"></i></span>
-        <div class="link-text">
-          <div>Kunjungi Showroom</div>
-          <div class="link-subtitle">Jl. Dokter Cipto Mangunkusumo No.36, Pemalang</div>
-        </div>
-      </a>
-    </div>
+    <div class="glass-card">
+      <!-- profile -->
+      <div class="profile">
+        <img src="https://i.imgur.com/EUqsSFH.png" alt="Sekawan Jaya" class="profile-img" />
+        <h1>SEKAWAN JAYA</h1>
+        <p>Pusat Keramik &amp; Granit Premium</p>
+      </div>
 
-    <div class="feedback-container">
-      <div class="feedback-form">
-        <h3 class="feedback-title">
-          <i class="fas fa-comment-dots"></i>
-          Kritik & Saran
-        </h3>
-        <form id="feedback-form">
-          <div class="feedback-input-group">
-            <textarea 
-              id="feedback-message" 
-              class="feedback-textarea" 
-              placeholder="Tulis kritik atau saran Anda di sini... (100% anonim, dikirim via email tanpa menyimpan data pribadi)"
-              maxlength="500"
-              rows="4"
-            ></textarea>
+      <!-- links -->
+      <div class="links">
+        <a href="https://wa.me/6288216124228" class="link-item whatsapp" target="_blank">
+          <span class="link-icon"><i class="fab fa-whatsapp"></i></span>
+          <div class="link-text">
+            <div class="title">Hubungi WhatsApp</div>
+            <div class="sub">Chat langsung dengan CS</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+
+        <a href="https://sekawanjayapml.github.io/catalog/kalkulator" class="link-item calculator" target="_blank">
+          <span class="link-icon"><i class="fas fa-calculator"></i></span>
+          <div class="link-text">
+            <div class="title">Kalkulator Keramik</div>
+            <div class="sub">Hitung kebutuhan akurat</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+
+        <a href="https://sekawanjayapml.github.io/catalog" class="link-item catalog" target="_blank">
+          <span class="link-icon"><i class="fas fa-book-open"></i></span>
+          <div class="link-text">
+            <div class="title">Katalog Produk</div>
+            <div class="sub">Lihat koleksi terbaru</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+
+        <a href="https://tiktok.com/@sekawanjayapemalang" class="link-item tiktok" target="_blank">
+          <span class="link-icon"><i class="fab fa-tiktok"></i></span>
+          <div class="link-text">
+            <div class="title">TikTok</div>
+            <div class="sub">Ikuti update terbaru</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+        <a href="https://facebook.com/61580002512516/" class="link-item facebook" target="_blank">
+          <span class="link-icon"><i class="fab fa-facebook"></i></span>
+          <div class="link-text">
+            <div class="title">Facebook</div>
+            <div class="sub">Ikuti update terbaru</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+        <a href="https://youtube.com/@sekawanjayapemalang" class="link-item youtube" target="_blank">
+          <span class="link-icon"><i class="fab fa-youtube"></i></span>
+          <div class="link-text">
+            <div class="title">YouTube</div>
+            <div class="sub">Ikuti update terbaru</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+        <a href="https://maps.app.goo.gl/2RNNvL2xbbCwzUcG6" class="link-item location" target="_blank">
+          <span class="link-icon"><i class="fas fa-map-marker-alt"></i></span>
+          <div class="link-text">
+            <div class="title">Kunjungi Showroom</div>
+            <div class="sub">Jl. Dokter Cipto No.36, Pemalang</div>
+          </div>
+          <span class="link-arrow"><i class="fas fa-chevron-right"></i></span>
+        </a>
+      </div>
+
+      <!-- feedback premium -->
+      <div class="feedback-container">
+        <div class="feedback-card">
+          <h3 class="feedback-title">
+            <i class="fas fa-comment-dots"></i> Kritik &amp; Saran
+          </h3>
+          <form id="feedback-form">
+            <textarea id="feedback-message" class="feedback-textarea" placeholder="Tulis kritik atau saran Anda di sini… 100% anonim, tidak menyimpan data pribadi." maxlength="500" rows="3"></textarea>
             <div class="feedback-info">
-              <span class="feedback-disclaimer">Feedback dikirim anonim dan tidak menyimpan data pribadi Anda</span>
+              <span><i class="fas fa-shield-alt" style="margin-right:4px;"></i>Anonim & aman</span>
               <span class="feedback-counter">0/500</span>
             </div>
+            <button type="submit" class="feedback-submit" id="feedback-submit">
+              <span class="feedback-submit-text">Kirim Feedback</span>
+              <i class="fas fa-paper-plane feedback-submit-icon"></i>
+              <i class="fas fa-spinner feedback-submit-spinner"></i>
+            </button>
+          </form>
+          <div class="feedback-success" id="feedback-success">
+            <i class="fas fa-check-circle"></i> Terima kasih! Feedback terkirim.
           </div>
-          <button type="submit" class="feedback-submit" id="feedback-submit">
-            <span class="feedback-submit-text">Kirim Feedback</span>
-            <i class="fas fa-paper-plane feedback-submit-icon"></i>
-            <i class="fas fa-spinner feedback-submit-spinner"></i>
-          </button>
-        </form>
-        <div class="feedback-success" id="feedback-success">
-          <i class="fas fa-check-circle"></i>
-          <span>Terima kasih! Feedback Anda telah dikirim.</span>
-        </div>
-        <div class="feedback-error" id="feedback-error">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Maaf, terjadi kesalahan. Silakan coba lagi.</span>
+          <div class="feedback-error" id="feedback-error">
+            <i class="fas fa-exclamation-circle"></i> Gagal, coba lagi.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="footer">
-      © 2025 Sekawan Jaya. All Rights Reserved.
+      <div class="footer">© 2025 Sekawan Jaya · All rights reserved</div>
     </div>
   </div>
 
   <script>
-    // Theme toggle
+    // theme
     const btn = document.getElementById('theme-btn');
-    const isDark = localStorage.getItem('theme') === 'dark' || 
-                   window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (isDark) {
       document.documentElement.setAttribute('data-theme', 'dark');
       btn.innerHTML = '<i class="fas fa-sun"></i>';
     }
     btn.addEventListener('click', () => {
-      const isDarkNow = document.documentElement.hasAttribute('data-theme');
-      if (isDarkNow) {
+      const dark = document.documentElement.hasAttribute('data-theme');
+      if (dark) {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
         btn.innerHTML = '<i class="fas fa-moon"></i>';
@@ -404,49 +511,46 @@
       }
     });
 
-    // EmailJS
+    // emailjs
     emailjs.init("vQEncuGNYSx5Prr_n");
-    const feedbackForm = document.getElementById('feedback-form');
-    const feedbackMessage = document.getElementById('feedback-message');
-    const feedbackCounter = document.querySelector('.feedback-counter');
-    const feedbackSubmit = document.getElementById('feedback-submit');
-    const feedbackSuccess = document.getElementById('feedback-success');
-    const feedbackError = document.getElementById('feedback-error');
+    const form = document.getElementById('feedback-form');
+    const msg = document.getElementById('feedback-message');
+    const counter = document.querySelector('.feedback-counter');
+    const submitBtn = document.getElementById('feedback-submit');
+    const successDiv = document.getElementById('feedback-success');
+    const errorDiv = document.getElementById('feedback-error');
 
-    feedbackMessage.addEventListener('input', () => {
-      const len = feedbackMessage.value.length;
-      feedbackCounter.textContent = `${len}/500`;
-      if (len > 450) feedbackCounter.style.color = '#ef4444';
-      else if (len > 400) feedbackCounter.style.color = '#f59e0b';
-      else feedbackCounter.style.color = '';
+    msg.addEventListener('input', () => {
+      const len = msg.value.length;
+      counter.textContent = `${len}/500`;
+      if (len > 450) counter.style.color = '#ef4444';
+      else if (len > 400) counter.style.color = '#f59e0b';
+      else counter.style.color = '';
     });
 
-    feedbackForm.addEventListener('submit', function(e) {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const msg = feedbackMessage.value.trim();
-      if (msg.length < 10) {
-        alert('Minimal 10 karakter.');
-        return;
-      }
+      const text = msg.value.trim();
+      if (text.length < 8) { alert('Minimal 8 karakter.'); return; }
 
-      feedbackSubmit.classList.add('loading');
-      feedbackSuccess.style.display = 'none';
-      feedbackError.style.display = 'none';
+      submitBtn.classList.add('loading');
+      successDiv.style.display = 'none';
+      errorDiv.style.display = 'none';
 
       emailjs.send('service_grynllw', 'template_g16eo9k', {
-        message: msg,
+        message: text,
         to_email: 'muhammadrizqoa@gmail.com'
       }).then(() => {
-        feedbackSubmit.classList.remove('loading');
-        feedbackSuccess.style.display = 'flex';
-        feedbackMessage.value = '';
-        feedbackCounter.textContent = '0/500';
-        feedbackCounter.style.color = '';
-        setTimeout(() => feedbackSuccess.style.display = 'none', 5000);
+        submitBtn.classList.remove('loading');
+        successDiv.style.display = 'flex';
+        msg.value = '';
+        counter.textContent = '0/500';
+        counter.style.color = '';
+        setTimeout(() => successDiv.style.display = 'none', 5000);
       }).catch(() => {
-        feedbackSubmit.classList.remove('loading');
-        feedbackError.style.display = 'flex';
-        setTimeout(() => feedbackError.style.display = 'none', 5000);
+        submitBtn.classList.remove('loading');
+        errorDiv.style.display = 'flex';
+        setTimeout(() => errorDiv.style.display = 'none', 5000);
       });
     });
   </script>
